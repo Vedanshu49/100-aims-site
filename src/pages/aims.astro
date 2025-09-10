@@ -140,7 +140,12 @@ const aims = [
         }
     </style>
 
-    <ol class="aim-list">
+    <ol class="aim-list" start="0">
+        <li>
+            <a href="/aims/0">
+                0. Basic Knowledge
+            </a>
+        </li>
         {aims.map((aim, index) => (
             <li>
                 <a href={`/aims/${index + 1}`}>
