@@ -1,0 +1,46 @@
+---
+// src/components/AimNavigation.astro
+const { aimNumber } = Astro.props;
+const currentAim = Number(aimNumber);
+
+const prevLink = currentAim > 1 ? `/aims/${currentAim - 1}` : null;
+const nextLink = currentAim < 100 ? `/aims/${currentAim + 1}` : null;
+---
+<nav class="aim-navigation">
+    {prevLink && <a href={prevLink} class="nav-button prev">← Previous Aim</a>}
+    
+    <a href="/aims" class="nav-button home">Back to All Aims</a>
+    
+    {nextLink && <a href={nextLink} class="nav-button next">Next Aim →</a>}
+</nav>
+
+<style>
+    .aim-navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+    }
+    .nav-button {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        background-color: var(--dark-gray);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 500;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+    .nav-button:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+    }
+    .nav-button.home {
+        background-color: var(--medium-gray);
+    }
+    .nav-button.home:hover {
+        background-color: var(--accent-color);
+    }
+</style>

@@ -1,0 +1,13 @@
+---
+// src/layouts/AimLayout.astro
+import BaseLayout from './BaseLayout.astro';
+import AimNavigation from '../components/AimNavigation.astro';
+
+// The aimNumber is passed from the frontmatter of the .md file
+const { frontmatter } = Astro.props;
+const { aimNumber } = frontmatter;
+---
+<BaseLayout>
+    <slot />
+    <AimNavigation aimNumber={aimNumber} />
+</BaseLayout>
