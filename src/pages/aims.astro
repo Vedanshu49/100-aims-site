@@ -1,108 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const aims = [
-  "Create a list of 10 student names and print them.",
-  "Append 5 new student names to an existing list.",
-  "Remove duplicate elements from a list.",
-  "Sort a list of student marks in ascending order.",
-  "Reverse the order of elements in a list.",
-  "Find the index of a particular element in a list.",
-  "Count the occurrence of a specific item in a list.",
-  "Merge two lists into a single list.",
-  "Slice a list to get the first five elements.",
-  "Replace an element at a specific index in a list.",
-  "Clear all elements from a list.",
-  "Create a tuple of 5 subjects and print it.",
-  "Access the first and last element of a tuple.",
-  "Demonstrate immutability of tuples by attempting modification.",
-  "Count the occurrences of a value in a tuple.",
-  "Find the length of a tuple.",
-  "Convert a list into a tuple.",
-  "Unpack a tuple into variables.",
-  "Concatenate two tuples.",
-  "Create a dictionary to store student name and marks.",
-  "Add a new student and marks to the dictionary.",
-  "Remove a student entry from the dictionary.",
-  "Update marks of a student in the dictionary.",
-  "Retrieve marks for a given student.",
-  "Check if a student name exists in the dictionary.",
-  "Get all student names as a list from the dictionary.",
-  "Get all marks as a list from the dictionary.",
-  "Count the number of students in the dictionary.",
-  "Loop through the dictionary and print key-value pairs.",
-  "Merge two dictionaries containing student data.",
-  "Clear all entries from the dictionary.",
-  "Create a set of student names to eliminate duplicates.",
-  "Add a new student name to the set.",
-  "Remove a student name from the set.",
-  "Perform union of two sets of students.",
-  "Perform intersection of two sets of students.",
-  "Check if one set is a subset of another.",
-  "Find difference between two sets.",
-  "Write a function to calculate factorial of a number.",
-  "Write a function to check if a string is a palindrome.",
-  "Write a function to find the maximum of three numbers.",
-  "Write a function to sum all elements in a list.",
-  "Write a function to count vowels in a string.",
-  "Write a function to find the Fibonacci sequence up to n terms.",
-  "Write a function to check if a number is prime.",
-  "Write a function to return the reverse of a string.",
-  "Write a function to calculate the area of a rectangle.",
-  "Write a function to convert Celsius to Fahrenheit.",
-  "Write a recursive function to compute power of a number.",
-  "Convert a string to uppercase.",
-  "Convert a string to lowercase.",
-  "Count the number of words in a sentence.",
-  "Replace all spaces in a string with underscores.",
-  "Check if a string starts with a specific prefix.",
-  "Extract a substring from a string.",
-  "Split a string into a list based on a delimiter.",
-  "Join a list of strings into a single string.",
-  "Remove leading and trailing whitespace from a string.",
-  "Find the position of a substring inside a string.",
-  "Create a 1D NumPy array of 10 numbers.",
-  "Create a 2D NumPy array (3x3 matrix).",
-  "Perform element-wise addition of two arrays.",
-  "Calculate the mean of elements in a NumPy array.",
-  "Find the maximum and minimum values in an array.",
-  "Reshape a 1D array into 2D.",
-  "Perform dot product of two arrays.",
-  "Create an array of zeros and ones.",
-  "Extract a subarray using slicing.",
-  "Find the standard deviation of array elements.",
-  "Create a DataFrame from a dictionary.",
-  "Read data from a CSV file into a DataFrame.",
-  "Select a column from a DataFrame.",
-  "Filter rows based on a condition.",
-  "Sort DataFrame by a column.",
-  "Add a new column to a DataFrame.",
-  "Drop a column from a DataFrame.",
-  "Group data by a column and calculate mean.",
-  "Handle missing values in a DataFrame.",
-  "Save a DataFrame to a CSV file.",
-  "Plot a line graph of student scores.",
-  "Plot a bar chart of student attendance.",
-  "Plot a histogram of student marks.",
-  "Create a scatter plot of two variables.",
-  "Add title and labels to a plot.",
-  "Change line style and color in a plot.",
-  "Plot multiple lines on the same graph.",
-  "Create a pie chart of grade distribution.",
-  "Save a plot as an image file.",
-  "Customize x and y axis ticks.",
-  "Write a program that takes student marks (list) and plots grade distribution (matplotlib).",
-  "Use pandas to read student data and calculate average marks.",
-  "Use NumPy to normalize a list of student scores.",
-  "Write a function that accepts a dictionary and returns students with marks above a threshold.",
-  "Convert a string of comma-separated numbers to a NumPy array.",
-  "Merge two pandas DataFrames on a common column.",
-  "Use sets to find students who attended two different classes.",
-  "Write a recursive function using tuple inputs.",
-  "Create a dictionary from two lists using zip().",
-  "Plot a bar chart using data stored in a pandas DataFrame.",
-  "Use string formatting to print student report cards."
-];
+const allAims = await Astro.glob('./aims/*.md');
+
+// Sort aims by aimNumber
+allAims.sort((a, b) => a.frontmatter.aimNumber - b.frontmatter.aimNumber);
+
+// Prepare aims data with title, aimNumber, and tags
+const aims = allAims.map(aim => ({
+  aimNumber: aim.frontmatter.aimNumber,
+  title: aim.frontmatter.title,
+  tags: aim.frontmatter.tags || [], // Ensure tags is an array, even if missing
+}));
+
+// Extract unique tags for filter buttons
+const allTags = [...new Set(aims.flatMap(aim => aim.tags))];
 ---
 <BaseLayout>
     <h1>Welcome to 100 Python Aims</h1>
@@ -113,7 +25,48 @@ const aims = [
         Click on any aim below to see the solution.
     </p>
 
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search aims by title...">
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-buttons">
+        {allTags.map(tag => (
+            <button class="filter-btn" data-tag={tag}>{tag}</button>
+        ))}
+    </div>
+
     <style>
+        .search-container {
+            margin: 2rem 0;
+        }
+        #search-bar {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .filter-buttons {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .filter-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .filter-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
         .aim-list {
             list-style: none;
             padding: 0;
@@ -138,20 +91,62 @@ const aims = [
         .aim-list a:hover {
             color: var(--dark-gray);
         }
+        /* Style for hidden items */
+        .hidden {
+            display: none;
+        }
     </style>
 
-    <ol class="aim-list" start="0">
-        <li>
-            <a href="/aims/0">
-                0. Basic Knowledge
-            </a>
-        </li>
-        {aims.map((aim, index) => (
-            <li>
-                <a href={`/aims/${index + 1}`}>
-                    {`${index + 1}. ${aim}`}
+    <ol class="aim-list" id="aims-list">
+        {aims.map((aim) => (
+            <li data-tags={aim.tags.join(',')}>
+                <a href={`/aims/${aim.aimNumber}`}>
+                    {`${aim.aimNumber}. ${aim.title}`}
                 </a>
             </li>
         ))}
     </ol>
+
+    <script>
+        const searchBar = document.getElementById('search-bar');
+        const aimsList = document.getElementById('aims-list');
+        const allAims = Array.from(aimsList.getElementsByTagName('li'));
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        let activeFilters = new Set();
+
+        function filterAims() {
+            const searchTerm = searchBar.value.toLowerCase();
+
+            allAims.forEach(aim => {
+                const title = aim.textContent.toLowerCase();
+                const tags = aim.dataset.tags ? aim.dataset.tags.toLowerCase().split(',') : [];
+
+                const matchesSearch = title.includes(searchTerm);
+                const matchesFilter = activeFilters.size === 0 || Array.from(activeFilters).every(filterTag => tags.includes(filterTag));
+
+                if (matchesSearch && matchesFilter) {
+                    aim.classList.remove('hidden');
+                } else {
+                    aim.classList.add('hidden');
+                }
+            });
+        }
+
+        searchBar.addEventListener('keyup', filterAims);
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tag = button.dataset.tag.toLowerCase();
+                if (activeFilters.has(tag)) {
+                    activeFilters.delete(tag);
+                    button.classList.remove('active');
+                } else {
+                    activeFilters.add(tag);
+                    button.classList.add('active');
+                }
+                filterAims();
+            });
+        });
+    </script>
 </BaseLayout>

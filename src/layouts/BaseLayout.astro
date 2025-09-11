@@ -18,6 +18,28 @@
             --dark-gray: #333;
             --medium-gray: #555;
             --accent-color: #007acc;
+
+            /* Light theme variables */
+            --bg-color: var(--light-gray);
+            --text-color: var(--dark-gray);
+            --card-bg: white;
+            --header-bg: var(--dark-gray);
+            --header-text: white;
+            --code-bg: #f6f8fa;
+            --code-text: #333;
+            --code-border: #e1e4e8;
+        }
+
+        :root.dark-theme {
+            /* Dark theme variables */
+            --bg-color: #282c34;
+            --text-color: #abb2bf;
+            --card-bg: #3a404d;
+            --header-bg: #21252b;
+            --header-text: #abb2bf;
+            --code-bg: #21252b;
+            --code-text: #abb2bf;
+            --code-border: #3a404d;
         }
 
         html, body {
@@ -25,9 +47,10 @@
             padding: 0;
             width: 100%;
             font-family: var(--font-family-sans);
-            background-color: var(--light-gray);
-            color: var(--dark-gray);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
@@ -37,17 +60,37 @@
         }
 
         .header {
-            background-color: var(--dark-gray);
-            color: white;
+            background-color: var(--header-bg);
+            color: var(--header-text);
             padding: var(--padding);
             text-align: center;
+            position: relative;
         }
 
         .header a {
-            color: white;
+            color: var(--header-text);
             text-decoration: none;
             font-size: 1.5rem;
             font-weight: bold;
+        }
+
+        .theme-switcher {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: 1px solid var(--header-text);
+            color: var(--header-text);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .theme-switcher:hover {
+            background-color: var(--header-text);
+            color: var(--header-bg);
         }
 
         .main-content {
@@ -56,17 +99,35 @@
             max-width: var(--content-width);
             margin: 2rem auto;
             padding: var(--padding);
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
 
         .footer {
-            background-color: var(--dark-gray);
-            color: white;
+            background-color: var(--header-bg);
+            color: var(--header-text);
             text-align: center;
             padding: 1rem;
             margin-top: auto;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Code block styling */
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid var(--code-border);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -74,6 +135,7 @@
     <div class="container">
         <header class="header">
             <a href="/aims">100 Python Aims</a>
+            <button id="theme-toggle" class="theme-switcher">Toggle Theme</button>
         </header>
 
         <main class="main-content">
@@ -84,5 +146,29 @@
             <p>&copy; {new Date().getFullYear()} | Built with Astro</p>
         </footer>
     </div>
+
+    <script is:inline>
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        // Check for saved theme preference on load
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            htmlElement.classList.add(currentTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // If no preference, check system preference
+            htmlElement.classList.add('dark-theme');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark-theme')) {
+                htmlElement.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light-theme');
+            } else {
+                htmlElement.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark-theme');
+            }
+        });
+    </script>
 </body>
 </html>
