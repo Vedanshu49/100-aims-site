@@ -54,46 +54,48 @@ const allTags = [...new Set(aims.flatMap(aim => aim.tags))];
     </ol>
 
     <script>
-        const searchBar = document.getElementById('search-bar');
-        const aimsList = document.getElementById('aims-list');
-        const allAims = Array.from(aimsList.getElementsByTagName('li'));
-        const filterButtons = document.querySelectorAll('.filter-btn');
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchBar = document.getElementById('search-bar');
+            const aimsList = document.getElementById('aims-list');
+            const allAims = Array.from(aimsList.getElementsByTagName('li'));
+            const filterButtons = document.querySelectorAll('.filter-btn');
 
-        let activeFilters = new Set();
+            let activeFilters = new Set();
 
-        function filterAims() {
-            const searchTerm = searchBar.value.toLowerCase();
+            function filterAims() {
+                const searchTerm = searchBar.value.toLowerCase();
 
-            allAims.forEach(aim => {
-                const title = aim.querySelector('a').textContent.toLowerCase(); // Get title from <a> tag
-                const tags = aim.dataset.tags ? aim.dataset.tags.toLowerCase().split(',') : [];
+                allAims.forEach(aim => {
+                    const title = aim.querySelector('a').textContent.toLowerCase(); // Get title from <a> tag
+                    const tags = aim.dataset.tags ? aim.dataset.tags.toLowerCase().split(',') : [];
 
-                const matchesSearch = title.includes(searchTerm);
-                const matchesFilter = activeFilters.size === 0 || Array.from(activeFilters).every(filterTag => tags.includes(filterTag));
+                    const matchesSearch = title.includes(searchTerm);
+                    const matchesFilter = activeFilters.size === 0 || Array.from(activeFilters).every(filterTag => tags.includes(filterTag));
 
-                if (matchesSearch && matchesFilter) {
-                    aim.classList.remove('hidden');
-                } else {
-                    aim.classList.add('hidden');
-                }
-            });
-        }
+                    if (matchesSearch && matchesFilter) {
+                        aim.classList.remove('hidden');
+                    } else {
+                        aim.classList.add('hidden');
+                    }
+                });
+            }
 
-        searchBar.addEventListener('keyup', filterAims);
+            searchBar.addEventListener('keyup', filterAims);
 
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const tag = button.dataset.tag.toLowerCase();
-                if (activeFilters.has(tag)) {
-                    activeFilters.delete(tag);
-                    button.classList.remove('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Remove active styles
-                    button.classList.add('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Add inactive styles
-                } else {
-                    activeFilters.add(tag);
-                    button.classList.remove('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Remove inactive styles
-                    button.classList.add('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Add active styles
-                }
-                filterAims();
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tag = button.dataset.tag.toLowerCase();
+                    if (activeFilters.has(tag)) {
+                        activeFilters.delete(tag);
+                        button.classList.remove('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Remove active styles
+                        button.classList.add('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Add inactive styles
+                    } else {
+                        activeFilters.add(tag);
+                        button.classList.remove('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Remove inactive styles
+                        button.classList.add('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Add active styles
+                    }
+                    filterAims();
+                });
             });
         });
     </script>
