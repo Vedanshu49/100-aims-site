@@ -10,7 +10,7 @@ allAims.sort((a, b) => a.frontmatter.aimNumber - b.frontmatter.aimNumber);
 const aims = allAims.map(aim => {
   const rawTitle = aim.frontmatter.title;
   // Remove leading "X. " if present
-  const cleanedTitle = rawTitle.replace(/^\d+\.\s*/, '');
+    const cleanedTitle = rawTitle ? rawTitle.replace(/^\d+\.\s*/, '') : '';
   return {
     aimNumber: aim.frontmatter.aimNumber,
     title: cleanedTitle,
