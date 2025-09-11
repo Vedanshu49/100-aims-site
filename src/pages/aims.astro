@@ -7,11 +7,16 @@ const allAims = await Astro.glob('./aims/*.md');
 allAims.sort((a, b) => a.frontmatter.aimNumber - b.frontmatter.aimNumber);
 
 // Prepare aims data with title, aimNumber, and tags
-const aims = allAims.map(aim => ({
-  aimNumber: aim.frontmatter.aimNumber,
-  title: aim.frontmatter.title,
-  tags: aim.frontmatter.tags || [], // Ensure tags is an array, even if missing
-}));
+const aims = allAims.map(aim => {
+  const rawTitle = aim.frontmatter.title;
+  // Remove leading "X. " if present
+  const cleanedTitle = rawTitle.replace(/^\d+\.\s*/, '');
+  return {
+    aimNumber: aim.frontmatter.aimNumber,
+    title: cleanedTitle,
+    tags: aim.frontmatter.tags || [], // Ensure tags is an array, even if missing
+  };
+});
 
 // Extract unique tags for filter buttons
 const allTags: string[] = [...new Set(aims.flatMap(aim => aim.tags))];
@@ -33,7 +38,7 @@ const allTags: string[] = [...new Set(aims.flatMap(aim => aim.tags))];
 
     <!-- Filter Buttons -->
     <div class="flex flex-wrap gap-2 mb-8">
-        {allTags.map(tag => (
+        {allTags.map((tag: string) => (
             <button class="filter-btn px-4 py-2 bg-gray-200 text-gray-800 rounded-full cursor-pointer transition-colors duration-200 hover:bg-blue-500 hover:text-white dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-blue-600" data-tag={tag}>{tag}</button>
         ))}
     </div>
@@ -74,7 +79,8 @@ const allTags: string[] = [...new Set(aims.flatMap(aim => aim.tags))];
                 allAims.forEach(aim => {
                     const anchorTag = aim.querySelector('a');
                     const title = anchorTag ? anchorTag.textContent?.toLowerCase() : '';
-                    const tags = (aim as HTMLElement).dataset.tags ? (aim as HTMLElement).dataset.tags!.toLowerCase().split(',') : [];
+                    const tagsAttribute = (aim as HTMLElement).dataset.tags;
+                    const tags = tagsAttribute ? tagsAttribute.toLowerCase().split(',') : [];
 
                     const matchesSearch = title.includes(searchTerm);
                     const matchesFilter = activeFilters.size === 0 || Array.from(activeFilters).every((filterTag: string) => tags.includes(filterTag));
