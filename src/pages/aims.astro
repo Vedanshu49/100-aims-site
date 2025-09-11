@@ -63,13 +63,13 @@ const allTags: string[] = [...new Set(aims.flatMap(aim => aim.tags))];
                 return;
             }
 
-            const allAims = Array.from(aimsList.getElementsByTagName('li'));
+            const allAims = Array.from(aimsList!.getElementsByTagName('li'));
             const filterButtons = document.querySelectorAll('.filter-btn');
 
             let activeFilters: Set<string> = new Set();
 
             function filterAims() {
-                const searchTerm = searchBar.value.toLowerCase();
+                const searchTerm = searchBar!.value.toLowerCase();
 
                 allAims.forEach(aim => {
                     const anchorTag = aim.querySelector('a');
@@ -87,7 +87,7 @@ const allTags: string[] = [...new Set(aims.flatMap(aim => aim.tags))];
                 });
             }
 
-            searchBar.addEventListener('keyup', filterAims);
+            searchBar!.addEventListener('keyup', filterAims);
 
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
