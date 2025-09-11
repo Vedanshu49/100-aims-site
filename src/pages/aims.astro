@@ -10,7 +10,121 @@ allAims.sort((a, b) => a.frontmatter.aimNumber - b.frontmatter.aimNumber);
 const aims = allAims.map(aim => {
   const rawTitle = aim.frontmatter.title;
   // Remove leading "X. " if present
+    ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allAims = await Astro.glob('./aims/*.md');
+
+// Sort aims by aimNumber
+allAims.sort((a, b) => a.frontmatter.aimNumber - b.frontmatter.aimNumber);
+
+// Prepare aims data with title, aimNumber, and tags
+const aims = allAims.map(aim => {
+  const rawTitle = aim.frontmatter.title;
+  // Remove leading "X. " if present
     const cleanedTitle = rawTitle ? rawTitle.replace(/^\d+\.\s*/, '') : '';
+  return {
+    aimNumber: aim.frontmatter.aimNumber,
+    title: cleanedTitle,
+    tags: aim.frontmatter.tags || [], // Ensure tags is an array, even if missing
+  };
+});
+
+// Extract unique tags for filter buttons
+const allTags: string[] = [...new Set(aims.flatMap(aim => aim.tags))];
+---
+<BaseLayout>
+    <h1 class="page-title">100 Python Aims</h1>
+    <p class="page-description">
+        This project is a collection of 100 practical Python programming challenges, designed for beginners and intermediate learners. Each "aim" is a self-contained problem with a Python solution, output, and a detailed explanation.
+    </p>
+    <p class="page-description">
+        Click on any aim below to see the solution.
+    </p>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search aims by title..."
+               class="search-input">
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-buttons-container">
+        {allTags.map((tag: string) => (
+            <button class="filter-btn" data-tag={tag}>{tag}</button>
+        ))}
+    </div>
+
+    <ol id="aims-list" class="aims-list">
+        {aims.map((aim) => (
+            <li data-tags={aim.tags.join(',')} class="aim-card">
+                <a href={`/aims/${aim.aimNumber}`} class="aim-link">
+                    <h2 class="aim-title">{`${aim.title}`}</h2>
+                </a>
+                <div class="aim-tags">
+                    {aim.tags.map((tag: string) => (
+                        <span class="tag-pill"><span>{tag}</span></span>
+                    ))}
+                </div>
+            </li>
+        ))}
+    </ol>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchBar = document.getElementById('search-bar') as HTMLInputElement;
+            const aimsList = document.getElementById('aims-list');
+
+            if (!aimsList || !searchBar) {
+                console.error('Required elements not found: aimsList or searchBar');
+                return;
+            }
+
+            const allAims = Array.from(aimsList!.getElementsByTagName('li'));
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            let activeFilters: Set<string> = new Set();
+
+            function filterAims() {
+                const searchTerm = searchBar!.value.toLowerCase();
+
+                allAims.forEach(aim => {
+                    const anchorTag = aim.querySelector('a');
+                    const title = anchorTag ? anchorTag.textContent?.toLowerCase() : '';
+                    const tagsAttribute = (aim as HTMLElement).dataset.tags;
+                    const tags = tagsAttribute ? tagsAttribute.toLowerCase().split(',') : [];
+
+                    const matchesSearch = title.includes(searchTerm);
+                    const matchesFilter = activeFilters.size === 0 || Array.from(activeFilters).every((filterTag: string) => tags.includes(filterTag));
+
+                    if (matchesSearch && matchesFilter) {
+                        aim.classList.remove('hidden');
+                    } else {
+                        aim.classList.add('hidden');
+                    }
+                });
+            }
+
+            searchBar!.addEventListener('keyup', filterAims);
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tag = (button as HTMLElement).dataset.tag?.toLowerCase();
+                    if (tag) {
+                        if (activeFilters.has(tag)) {
+                            activeFilters.delete(tag);
+                            button.classList.remove('active'); // Remove active styles
+                        } else {
+                            activeFilters.add(tag);
+                            button.classList.add('active'); // Add active styles
+                        }
+                        filterAims();
+                    }
+                });
+            });
+        });
+    </script>
+</BaseLayout>
   return {
     aimNumber: aim.frontmatter.aimNumber,
     title: cleanedTitle,

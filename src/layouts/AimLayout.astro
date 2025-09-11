@@ -13,6 +13,21 @@ const { aimNumber } = frontmatter;
     </div>
     <AimNavigation aimNumber={aimNumber} />
 
+    ---
+// src/layouts/AimLayout.astro
+import BaseLayout from './BaseLayout.astro';
+import AimNavigation from '../components/AimNavigation.astro';
+
+// The aimNumber is passed from the frontmatter of the .md file
+const { frontmatter } = Astro.props;
+const { aimNumber } = frontmatter;
+---
+<BaseLayout>
+    <div class="aim-content">
+        <slot />
+    </div>
+    <AimNavigation aimNumber={aimNumber} />
+
     <script is:inline>
         document.addEventListener('DOMContentLoaded', () => {
             const codeBlocks = document.querySelectorAll('pre code');
@@ -21,15 +36,12 @@ const { aimNumber } = frontmatter;
                 const pre = codeBlock.parentNode;
                 if (pre.tagName === 'PRE') {
                     const container = document.createElement('div');
-                    container.classList.add('relative', 'mb-4'); // Tailwind classes for container
+                    container.classList.add('code-block-container'); // Custom class for container
                     pre.parentNode.insertBefore(container, pre);
                     container.appendChild(pre);
 
                     const copyButton = document.createElement('button');
-                    copyButton.classList.add(
-                        'absolute', 'top-2', 'right-2', 'bg-gray-700', 'text-white', 'px-3', 'py-1', 'rounded-md', 'text-sm', 'cursor-pointer',
-                        'opacity-80', 'hover:opacity-100', 'transition-opacity', 'duration-200'
-                    ); // Tailwind classes for button
+                    copyButton.classList.add('copy-button'); // Custom class for button
                     copyButton.textContent = 'Copy';
                     container.appendChild(copyButton);
 
@@ -48,4 +60,5 @@ const { aimNumber } = frontmatter;
             });
         });
     </script>
+</BaseLayout>
 </BaseLayout>
