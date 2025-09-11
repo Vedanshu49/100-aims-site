@@ -38,3 +38,40 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         }
     </style>
 </BaseLayout>
+<BaseLayout>
+    <div class="welcome-container">
+        <h1>Welcome to 100 Python Aims</h1>
+        <p class="byline">a project by Vedanshu</p>
+        <a href="/aims" class="continue-button">Continue</a>
+    </div>
+    <style>
+        .welcome-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 50vh; /* vh is viewport height */
+        }
+        .byline {
+            font-size: 1.2rem;
+            color: var(--medium-gray);
+            margin-top: -1rem;
+        }
+        .continue-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.8rem 2.5rem;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+        .continue-button:hover {
+            background-color: #005a99; /* A darker shade of the accent color */
+        }
+    </style>
+</BaseLayout>

@@ -14,7 +14,7 @@ const aims = allAims.map(aim => ({
 }));
 
 // Extract unique tags for filter buttons
-const allTags = [...new Set(aims.flatMap(aim => aim.tags))];
+const allTags: string[] = [...new Set(aims.flatMap(aim => aim.tags))];
 ---
 <BaseLayout>
     <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Welcome to 100 Python Aims</h1>
@@ -38,14 +38,14 @@ const allTags = [...new Set(aims.flatMap(aim => aim.tags))];
         ))}
     </div>
 
-    <ol class="list-none p-0 mt-8 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <ol id="aims-list" class="list-none p-0 mt-8 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {aims.map((aim) => (
             <li data-tags={aim.tags.join(',')} class="bg-white dark:bg-gray-700 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-gray-600">
                 <a href={`/aims/${aim.aimNumber}`} class="block p-4 text-gray-800 dark:text-gray-100 font-medium text-lg no-underline hover:text-blue-600 dark:hover:text-blue-400">
-                    {`${aim.aimNumber}. ${aim.title}`}
+                    {`${aim.title}`}
                 </a>
                 <div class="px-4 pb-2 text-sm text-gray-600 dark:text-gray-400">
-                    {aim.tags.map(tag => (
+                    {aim.tags.map((tag: string) => (
                         <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-1 mb-1 dark:bg-blue-800 dark:text-blue-100">{tag}</span>
                     ))}
                 </div>
@@ -55,22 +55,29 @@ const allTags = [...new Set(aims.flatMap(aim => aim.tags))];
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const searchBar = document.getElementById('search-bar');
+            const searchBar = document.getElementById('search-bar') as HTMLInputElement;
             const aimsList = document.getElementById('aims-list');
+
+            if (!aimsList || !searchBar) {
+                console.error('Required elements not found: aimsList or searchBar');
+                return;
+            }
+
             const allAims = Array.from(aimsList.getElementsByTagName('li'));
             const filterButtons = document.querySelectorAll('.filter-btn');
 
-            let activeFilters = new Set();
+            let activeFilters: Set<string> = new Set();
 
             function filterAims() {
                 const searchTerm = searchBar.value.toLowerCase();
 
                 allAims.forEach(aim => {
-                    const title = aim.querySelector('a').textContent.toLowerCase(); // Get title from <a> tag
-                    const tags = aim.dataset.tags ? aim.dataset.tags.toLowerCase().split(',') : [];
+                    const anchorTag = aim.querySelector('a');
+                    const title = anchorTag ? anchorTag.textContent?.toLowerCase() : '';
+                    const tags = (aim as HTMLElement).dataset.tags ? (aim as HTMLElement).dataset.tags!.toLowerCase().split(',') : [];
 
                     const matchesSearch = title.includes(searchTerm);
-                    const matchesFilter = activeFilters.size === 0 || Array.from(activeFilters).every(filterTag => tags.includes(filterTag));
+                    const matchesFilter = activeFilters.size === 0 || Array.from(activeFilters).every((filterTag: string) => tags.includes(filterTag));
 
                     if (matchesSearch && matchesFilter) {
                         aim.classList.remove('hidden');
@@ -84,17 +91,19 @@ const allTags = [...new Set(aims.flatMap(aim => aim.tags))];
 
             filterButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    const tag = button.dataset.tag.toLowerCase();
-                    if (activeFilters.has(tag)) {
-                        activeFilters.delete(tag);
-                        button.classList.remove('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Remove active styles
-                        button.classList.add('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Add inactive styles
-                    } else {
-                        activeFilters.add(tag);
-                        button.classList.remove('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Remove inactive styles
-                        button.classList.add('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Add active styles
+                    const tag = (button as HTMLElement).dataset.tag?.toLowerCase();
+                    if (tag) {
+                        if (activeFilters.has(tag)) {
+                            activeFilters.delete(tag);
+                            button.classList.remove('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Remove active styles
+                            button.classList.add('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Add inactive styles
+                        } else {
+                            activeFilters.add(tag);
+                            button.classList.remove('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Remove inactive styles
+                            button.classList.add('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Add active styles
+                        }
+                        filterAims();
                     }
-                    filterAims();
                 });
             });
         });

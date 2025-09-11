@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --dark-gray: #1f2937; /* Tailwind gray-800 */
+    --medium-gray: #4b5563; /* Tailwind gray-600 */
+    --accent-color: #3b82f6; /* Tailwind blue-500 */
+}
+
+/* Dark mode adjustments */
+.dark {
+    --dark-gray: #111827; /* Tailwind gray-900 */
+    --medium-gray: #374151; /* Tailwind gray-700 */
+    --accent-color: #60a5fa; /* Tailwind blue-400 */
+}
