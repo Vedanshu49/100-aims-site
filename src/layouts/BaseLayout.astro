@@ -9,143 +9,24 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>100 Python Aims</title>
-    <style>
-        :root {
-            --font-family-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --content-width: 800px;
-            --padding: 1rem 2rem;
-            --light-gray: #f4f4f4;
-            --dark-gray: #333;
-            --medium-gray: #555;
-            --accent-color: #007acc;
-
-            /* Light theme variables */
-            --bg-color: var(--light-gray);
-            --text-color: var(--dark-gray);
-            --card-bg: white;
-            --header-bg: var(--dark-gray);
-            --header-text: white;
-            --code-bg: #f6f8fa;
-            --code-text: #333;
-            --code-border: #e1e4e8;
-        }
-
-        :root.dark-theme {
-            /* Dark theme variables */
-            --bg-color: #282c34;
-            --text-color: #abb2bf;
-            --card-bg: #3a404d;
-            --header-bg: #21252b;
-            --header-text: #abb2bf;
-            --code-bg: #21252b;
-            --code-text: #abb2bf;
-            --code-border: #3a404d;
-        }
-
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            font-family: var(--font-family-sans);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .header {
-            background-color: var(--header-bg);
-            color: var(--header-text);
-            padding: var(--padding);
-            text-align: center;
-            position: relative;
-        }
-
-        .header a {
-            color: var(--header-text);
-            text-decoration: none;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .theme-switcher {
-            position: absolute;
-            right: 2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: 1px solid var(--header-text);
-            color: var(--header-text);
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .theme-switcher:hover {
-            background-color: var(--header-text);
-            color: var(--header-bg);
-        }
-
-        .main-content {
-            flex: 1;
-            width: 100%;
-            max-width: var(--content-width);
-            margin: 2rem auto;
-            padding: var(--padding);
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: background-color 0.3s, box-shadow 0.3s;
-        }
-
-        .footer {
-            background-color: var(--header-bg);
-            color: var(--header-text);
-            text-align: center;
-            padding: 1rem;
-            margin-top: auto;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        /* Code block styling */
-        pre {
-            background-color: var(--code-bg);
-            color: var(--code-text);
-            padding: 1rem;
-            border-radius: 5px;
-            overflow-x: auto;
-            border: 1px solid var(--code-border);
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-        }
-
-        code {
-            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
-            font-size: 0.9rem;
-        }
-    </style>
+    <link rel="stylesheet" href="../styles/global.css" />
+    
 </head>
-<body>
-    <div class="container">
-        <header class="header">
-            <a href="/aims">100 Python Aims</a>
-            <button id="theme-toggle" class="theme-switcher">Toggle Theme</button>
-        </header>
+<body class="min-h-screen flex flex-col font-sans bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <header class="bg-gray-800 text-white p-4 text-center relative dark:bg-gray-800">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/aims" class="text-2xl font-bold text-white no-underline">100 Python Aims</a>
+            <button id="theme-toggle" class="px-4 py-2 border border-white text-white rounded-md cursor-pointer text-sm transition-colors duration-300 hover:bg-white hover:text-gray-800">Toggle Theme</button>
+        </div>
+    </header>
 
-        <main class="main-content">
-            <slot />
-        </main>
+    <main class="flex-grow w-full max-w-3xl mx-auto my-8 p-8 bg-white rounded-lg shadow-md dark:bg-gray-800 transition-colors duration-300">
+        <slot />
+    </main>
 
-        <footer class="footer">
-            <p>&copy; {new Date().getFullYear()} | Built with Astro</p>
-        </footer>
-    </div>
+    <footer class="bg-gray-800 text-white p-4 text-center dark:bg-gray-800">
+        <p class="text-sm">&copy; {new Date().getFullYear()} | Built with Astro</p>
+    </footer>
 
     <script is:inline>
         const themeToggle = document.getElementById('theme-toggle');
@@ -157,16 +38,16 @@
             htmlElement.classList.add(currentTheme);
         } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             // If no preference, check system preference
-            htmlElement.classList.add('dark-theme');
+            htmlElement.classList.add('dark'); // Use 'dark' class for Tailwind
         }
 
         themeToggle.addEventListener('click', () => {
-            if (htmlElement.classList.contains('dark-theme')) {
-                htmlElement.classList.remove('dark-theme');
-                localStorage.setItem('theme', 'light-theme');
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
             } else {
-                htmlElement.classList.add('dark-theme');
-                localStorage.setItem('theme', 'dark-theme');
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
             }
         });
     </script>

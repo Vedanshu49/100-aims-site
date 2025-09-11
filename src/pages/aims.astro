@@ -17,92 +17,38 @@ const aims = allAims.map(aim => ({
 const allTags = [...new Set(aims.flatMap(aim => aim.tags))];
 ---
 <BaseLayout>
-    <h1>Welcome to 100 Python Aims</h1>
-    <p>
+    <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Welcome to 100 Python Aims</h1>
+    <p class="mb-4 text-gray-700 dark:text-gray-300">
         This project is a collection of 100 practical Python programming challenges, designed for beginners and intermediate learners. Each "aim" is a self-contained problem with a Python solution, output, and a detailed explanation.
     </p>
-    <p>
+    <p class="mb-6 text-gray-700 dark:text-gray-300">
         Click on any aim below to see the solution.
     </p>
 
     <!-- Search Bar -->
-    <div class="search-container">
-        <input type="text" id="search-bar" placeholder="Search aims by title...">
+    <div class="mb-6">
+        <input type="text" id="search-bar" placeholder="Search aims by title..."
+               class="w-full p-3 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
     </div>
 
     <!-- Filter Buttons -->
-    <div class="filter-buttons">
+    <div class="flex flex-wrap gap-2 mb-8">
         {allTags.map(tag => (
-            <button class="filter-btn" data-tag={tag}>{tag}</button>
+            <button class="filter-btn px-4 py-2 bg-gray-200 text-gray-800 rounded-full cursor-pointer transition-colors duration-200 hover:bg-blue-500 hover:text-white dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-blue-600" data-tag={tag}>{tag}</button>
         ))}
     </div>
 
-    <style>
-        .search-container {
-            margin: 2rem 0;
-        }
-        #search-bar {
-            width: 100%;
-            padding: 0.8rem;
-            font-size: 1.1rem;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .filter-buttons {
-            margin-bottom: 2rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .filter-btn {
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-        .filter-btn.active {
-            background-color: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-        .aim-list {
-            list-style: none;
-            padding: 0;
-            margin-top: 2rem;
-        }
-        .aim-list li {
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            border-left: 3px solid transparent;
-            padding-left: 1.5rem;
-            transition: all 0.2s ease-in-out;
-        }
-        .aim-list li:hover {
-            border-left-color: var(--accent-color);
-            transform: translateX(5px);
-        }
-        .aim-list a {
-            text-decoration: none;
-            color: var(--medium-gray);
-            font-weight: 500;
-        }
-        .aim-list a:hover {
-            color: var(--dark-gray);
-        }
-        /* Style for hidden items */
-        .hidden {
-            display: none;
-        }
-    </style>
-
-    <ol class="aim-list" id="aims-list">
+    <ol class="list-none p-0 mt-8 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {aims.map((aim) => (
-            <li data-tags={aim.tags.join(',')}>
-                <a href={`/aims/${aim.aimNumber}`}>
+            <li data-tags={aim.tags.join(',')} class="bg-white dark:bg-gray-700 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 dark:border-gray-600">
+                <a href={`/aims/${aim.aimNumber}`} class="block p-4 text-gray-800 dark:text-gray-100 font-medium text-lg no-underline hover:text-blue-600 dark:hover:text-blue-400">
                     {`${aim.aimNumber}. ${aim.title}`}
                 </a>
+                <div class="px-4 pb-2 text-sm text-gray-600 dark:text-gray-400">
+                    {aim.tags.map(tag => (
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-1 mb-1 dark:bg-blue-800 dark:text-blue-100">{tag}</span>
+                    ))}
+                </div>
             </li>
         ))}
     </ol>
@@ -119,7 +65,7 @@ const allTags = [...new Set(aims.flatMap(aim => aim.tags))];
             const searchTerm = searchBar.value.toLowerCase();
 
             allAims.forEach(aim => {
-                const title = aim.textContent.toLowerCase();
+                const title = aim.querySelector('a').textContent.toLowerCase(); // Get title from <a> tag
                 const tags = aim.dataset.tags ? aim.dataset.tags.toLowerCase().split(',') : [];
 
                 const matchesSearch = title.includes(searchTerm);
@@ -140,10 +86,12 @@ const allTags = [...new Set(aims.flatMap(aim => aim.tags))];
                 const tag = button.dataset.tag.toLowerCase();
                 if (activeFilters.has(tag)) {
                     activeFilters.delete(tag);
-                    button.classList.remove('active');
+                    button.classList.remove('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Remove active styles
+                    button.classList.add('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Add inactive styles
                 } else {
                     activeFilters.add(tag);
-                    button.classList.add('active');
+                    button.classList.remove('bg-gray-200', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-200'); // Remove inactive styles
+                    button.classList.add('bg-blue-500', 'text-white', 'dark:bg-blue-600'); // Add active styles
                 }
                 filterAims();
             });
