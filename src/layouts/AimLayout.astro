@@ -8,6 +8,10 @@ const { frontmatter } = Astro.props;
 const { aimNumber } = frontmatter;
 ---
 <BaseLayout>
+    <div class="aim-header mb-8">
+        <a href="/aims" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300">&larr; Back to Aims</a>
+        <h1 class="text-4xl font-bold mt-4 text-gray-900 dark:text-gray-100">{frontmatter.title}</h1>
+    </div>
     <div class="prose dark:prose-invert max-w-none">
         <slot />
     </div>
