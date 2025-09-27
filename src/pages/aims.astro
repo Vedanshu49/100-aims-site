@@ -22,13 +22,7 @@ const aims = allAims.map(aim => {
 const allTags: string[] = [...new Set(aims.flatMap(aim => aim.tags))];
 ---
 <BaseLayout>
-    <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Welcome to 100 Python Aims</h1>
-    <p class="mb-4 text-gray-700 dark:text-gray-300">
-        This project is a collection of 100 practical Python programming challenges, designed for beginners and intermediate learners.
-    </p>
-    <p class="mb-6 text-gray-700 dark:text-gray-300">
-        Click on any aim below to see the solution.
-    </p>
+    <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">100 Python Aims</h1>
 
     <div class="mb-6">
         <input type="text" id="search-bar" placeholder="Search aims by title..."
