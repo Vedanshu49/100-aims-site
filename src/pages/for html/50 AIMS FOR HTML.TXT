@@ -1,0 +1,74 @@
+HTML Learning Goals: A 50-Aim List
+
+Phase 1: The Absolute Basics
+
+Understand what HTML (HyperText Markup Language) is and its role as the skeleton of a web page.
+
+Learn the basic structure of an HTML document: <!DOCTYPE html>, <html>, <head>, and <body>.
+
+Write your first "Hello, World!" page and open it in a web browser.
+
+Understand the concept of HTML elements (tags) and attributes.
+
+Learn the difference between opening tags (<p>) and closing tags (</p>).
+
+Understand what "void" or "empty" elements are (e.g., <br>, <img>).
+
+Learn how to add comments to your HTML code (<!-- ... -->).
+
+Phase 2: Working with Text
+8.  Master the six levels of heading tags (<h1> to <h6>).
+9.  Learn to structure text using the paragraph tag (<p>).
+10. Use the line break tag (<br>) for simple line breaks.
+11. Understand and use basic text formatting: <strong> (bold) and <em> (italic/emphasis).
+12. Learn the semantic difference between <b>/<i> and <strong>/<em>.
+13. Use <span> as a generic inline container for styling text.
+
+Phase 3: Links & Images
+14. Create hyperlinks (links) using the anchor tag (<a>).
+15. Understand the href attribute to set a link's destination.
+16. Learn to use the target="_blank" attribute to open links in a new tab.
+17. Create email links (mailto:) and telephone links (tel:).
+18. Link to different sections of the same page using IDs (#section-id).
+19. Embed images using the <img> tag.
+20. Understand the importance of the src (source) and alt (alternative text) attributes.
+21. Set image width and height attributes (and understand why CSS is often better for this).
+
+Phase 4: Lists
+22. Create an unordered (bulleted) list using <ul> and <li>.
+23. Create an ordered (numbered) list using <ol> and <li>.
+24. Learn how to nest lists (e.g., a <ul> inside an <li>).
+25. Create a definition list (glossary) using <dl>, <dt>, and <dd>.
+
+Phase 5: Tables
+26. Understand when to use tables (for tabular data, not layout).
+27. Create a basic table structure with <table>, <tr> (table row), and <td> (table data).
+28. Add table headers using <th> (table header).
+29. Use <thead>, <tbody>, and <tfoot> to structure a table semantically.
+30. Learn to merge cells using colspan and rowspan attributes.
+
+Phase 6: Forms
+31. Create a form container using the <form> tag.
+32. Understand the action and method (GET/POST) attributes of a form.
+33. Add text input fields using <input type="text">.
+34. Use the <label> tag to properly associate text with a form control.
+35. Learn common input types: password, email, number, date.
+36. Create checkboxes (<input type="checkbox">) and radio buttons (<input type="radio">).
+37. Use the name attribute to group radio buttons.
+38. Create a drop-down menu using <select> and <option>.
+39. Add a multi-line text area using <textarea>.
+40. Create different types of buttons: <button type="submit">, <button type="reset">, and <button type="button">.
+
+Phase 7: Semantic HTML
+41. Understand the importance of semantic HTML for accessibility and SEO.
+42. Replace generic <div> tags with meaningful layout tags.
+43. Learn to use <header>, <footer>, and <nav>.
+44. Structure main content with <main>, <article>, and <section>.
+45. Learn the use case for <aside> (e.g., for sidebars).
+46. Understand how <figure> and <figcaption> are used for images and diagrams.
+
+Phase 8: Advanced & Best Practices
+47. Learn to add global attributes like id (unique identifier) and class (for styling with CSS).
+48. Embed other content (like videos or maps) using an <iframe>.
+49. Understand the <meta> tags in the <head>, especially for charset and viewport.
+50. Learn how to validate your HTML code using a tool like the W3C Validator to check for errors.
