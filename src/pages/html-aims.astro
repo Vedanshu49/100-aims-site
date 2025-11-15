@@ -9,13 +9,10 @@ allAims.sort((a, b) => a.frontmatter.aimNumber - b.frontmatter.aimNumber);
 // Prepare aims data with title, aimNumber, and tags
 const aims = allAims.map((aim, index) => {
   const rawTitle = aim.frontmatter.title;
-  // Remove leading "X. " or "Aim #" if present
   const cleanedTitle = rawTitle ? rawTitle.replace(/^\d+\.\s*/, '').replace(/^Aim\s*#\d+:\s*/, '').replace('#','') : '';
   
-  // Use frontmatter aimNumber or fallback to index
   const aimNumber = aim.frontmatter.aimNumber !== undefined ? aim.frontmatter.aimNumber : index;
   
-  // Use difficulty from frontmatter or determine by aim number
   let difficulty = aim.frontmatter.difficulty || 'Beginner';
   if (!aim.frontmatter.difficulty) {
     if (aimNumber > 35) difficulty = 'Advanced';
@@ -30,271 +27,101 @@ const aims = allAims.map((aim, index) => {
     estimatedTime: aim.frontmatter.estimatedTime || `${10 + (aimNumber % 15)} min`
   };
 });
-
-// Extract unique tags for filter buttons
-const allTags: string[] = ["Beginner", "Intermediate", "Advanced", "Concepts", "Tags", "Structure", "Text", "Links", "Images", "Lists", "Tables", "Forms", "Semantics", "Accessibility", "Meta", "Validation"];
 ---
+
 <BaseLayout>
-    <div class="max-w-7xl mx-auto px-4 md:px-8 w-full">
-        <div class="text-center mb-8">
-            <h1 class="text-5xl font-bold mb-4 text-gray-900 dark:text-gray-100">🌐 50 HTML Challenges</h1>
-            <p class="text-xl leading-relaxed text-gray-600 dark:text-gray-400">Master HTML from fundamentals to advanced concepts. Build the foundation for web development with our comprehensive HTML challenges.</p>
+    <div class="challenges-page">
+        <div class="challenges-header">
+            <h1>🌐 Web Development: HTML</h1>
+            <p>Master HTML from fundamentals to advanced. 50 hands-on challenges to build a strong web development foundation.</p>
         </div>
 
-        <!-- Search Bar -->
-        <div class="my-8">
-            <input type="text" id="search-bar" placeholder="Search HTML challenges by name or topic..."
-                class="w-full p-4 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 transition-all duration-300 mb-4" 
-                aria-label="Search HTML challenges">
-        </div>
-
-        <!-- Filter Pills -->
-        <div class="my-8">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Filter by difficulty & topic:</h2>
-                <button id="clear-filters" class="clear-filters-btn hidden" aria-label="Clear all filters">Clear All</button>
+        <!-- Search & Filter -->
+        <div class="search-filter-section">
+            <div class="search-box">
+                🔍
+                <input type="text" id="search-bar" placeholder="Search challenges..." aria-label="Search HTML challenges">
             </div>
-            <div class="filter-buttons-container" role="group" aria-label="Filter options">
-                {["Beginner", "Intermediate", "Advanced"].map((difficulty: string) => (
-                    <button class="filter-btn" data-filter={difficulty.toLowerCase()} data-type="difficulty" aria-pressed="false">
-                        {difficulty}
-                    </button>
-                ))}
-                {allTags.slice(3).map((tag: string) => (
-                    <button class="filter-btn" data-filter={tag.toLowerCase()} data-type="tag" aria-pressed="false">
-                        {tag}
-                    </button>
-                ))}
-            </div>
+            <select id="difficulty-filter" class="filter-select" aria-label="Filter by difficulty">
+                <option value="">All Difficulty Levels</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
         </div>
 
-        <!-- Active Filters Display -->
-        <div id="active-filters" class="active-filters hidden" aria-live="polite" aria-label="Active filters"></div>
-
-        <!-- Results count -->
-        <div class="mb-6 text-sm text-gray-600 dark:text-gray-400">
-            <span id="results-count">Showing {aims.length} challenges</span>
-        </div>
-
-        <!-- Aims Grid -->
-        <div id="aims-list" class="aims-list" role="list">
+        <!-- Challenges Grid -->
+        <div id="aims-list" class="challenges-grid">
             {aims.map((aim) => (
-                <div data-tags={aim.tags.join(',')} data-difficulty={aim.difficulty.toLowerCase()} class="aim-card" role="listitem">
-                    <div class="aim-card-header">
-                        <span class="aim-number">Challenge #{String(aim.aimNumber).padStart(2, '0')}</span>
-                        <button class="favorite-btn" data-aim-id={aim.aimNumber} aria-label={`Add challenge ${aim.aimNumber} to favorites`} title="Add to favorites">
-                            ♡
-                        </button>
-                    </div>
-                    <a href={`/html-aims/${aim.aimNumber}`} class="aim-link">
-                        {aim.title}
-                    </a>
-                    <div class="aim-metadata">
-                        <span class="metadata-item">
-                            <span class={`difficulty-badge difficulty-${aim.difficulty.toLowerCase()}`}>{aim.difficulty}</span>
+                <a href={`/html-aims/${aim.aimNumber}`} data-difficulty={aim.difficulty.toLowerCase()} class="challenge-card">
+                    <div class="challenge-number">Challenge #{String(aim.aimNumber).padStart(2, '0')}</div>
+                    <h3 class="challenge-title">{aim.title}</h3>
+                    <p class="challenge-description">Learn and practice this important HTML concept through hands-on coding.</p>
+                    <div class="challenge-meta">
+                        <span class={`difficulty-badge difficulty-${aim.difficulty.toLowerCase()}`}>
+                            {aim.difficulty}
                         </span>
-                        <span class="metadata-item" title="Estimated time">
-                            ⏱️ {aim.estimatedTime}
-                        </span>
+                        <span>⏱️ {aim.estimatedTime}</span>
                     </div>
-                    <div class="aim-tags">
-                        {aim.tags.map((tag: string) => (
-                            <span class="tag-pill" data-tag={tag.toLowerCase()} role="button" tabindex="0">
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
-                </div>
+                </a>
             ))}
         </div>
 
         <!-- No Results Message -->
-        <div id="no-results" class="text-center py-12 hidden">
-            <p class="text-xl text-gray-600 dark:text-gray-400 mb-4">No challenges match your search criteria.</p>
-            <button id="reset-filters-btn" class="action-button">Reset Filters</button>
+        <div id="no-results" style="display: none; text-align: center; padding: 3rem 1rem;">
+            <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 1.5rem;">No challenges match your search.</p>
+            <button id="reset-filters-btn" class="btn btn-primary">Reset Filters</button>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchBar = document.getElementById('search-bar') as HTMLInputElement;
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const tagPills = document.querySelectorAll('.tag-pill');
-            const favoriteBtns = document.querySelectorAll('.favorite-btn');
+            const difficultyFilter = document.getElementById('difficulty-filter') as HTMLSelectElement;
             const aimsList = document.getElementById('aims-list');
-            const activeFiltersDiv = document.getElementById('active-filters');
-            const clearFiltersBtn = document.getElementById('clear-filters');
-            const resultsCount = document.getElementById('results-count');
             const noResultsDiv = document.getElementById('no-results');
-            const resetFiltersBtn = document.getElementById('reset-filters-btn');
+            const resetBtn = document.getElementById('reset-filters-btn');
 
             if (!aimsList || !searchBar) return;
 
-            const allAims = Array.from(aimsList.querySelectorAll('div[data-tags]'));
-            const activeFilters = new Set<string>();
-            const favorites = new Set<string>(JSON.parse(localStorage.getItem('html-favorites') || '[]'));
+            const allAims = Array.from(aimsList.querySelectorAll('a[data-difficulty]'));
 
-            // Update favorite buttons on load
-            favoriteBtns.forEach(btn => {
-                const aimId = btn.getAttribute('data-aim-id');
-                if (favorites.has(aimId!)) {
-                    btn.classList.add('favorited');
-                }
-            });
-
-            // Handle favorite button clicks
-            favoriteBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const aimId = btn.getAttribute('data-aim-id')!;
-                    if (favorites.has(aimId)) {
-                        favorites.delete(aimId);
-                        btn.classList.remove('favorited');
-                    } else {
-                        favorites.add(aimId);
-                        btn.classList.add('favorited');
-                    }
-                    localStorage.setItem('html-favorites', JSON.stringify(Array.from(favorites)));
-                });
-            });
-
-            // Handle filter button clicks
-            filterButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const filter = btn.getAttribute('data-filter')!;
-                    const type = btn.getAttribute('data-type')!;
-                    const filterKey = `${type}:${filter}`;
-
-                    if (activeFilters.has(filterKey)) {
-                        activeFilters.delete(filterKey);
-                        btn.classList.remove('active');
-                        btn.setAttribute('aria-pressed', 'false');
-                    } else {
-                        activeFilters.add(filterKey);
-                        btn.classList.add('active');
-                        btn.setAttribute('aria-pressed', 'true');
-                    }
-                    updateFilters();
-                });
-            });
-
-            // Handle tag clicks
-            tagPills.forEach(tag => {
-                tag.addEventListener('click', () => {
-                    const tagValue = tag.getAttribute('data-tag')!;
-                    const filterKey = `tag:${tagValue}`;
-
-                    if (activeFilters.has(filterKey)) {
-                        activeFilters.delete(filterKey);
-                    } else {
-                        activeFilters.add(filterKey);
-                    }
-                    updateFilters();
-                });
-            });
-
-            function updateActiveFiltersDisplay() {
-                activeFiltersDiv!.innerHTML = '';
-                
-                if (activeFilters.size === 0) {
-                    activeFiltersDiv!.classList.add('hidden');
-                    clearFiltersBtn!.classList.add('hidden');
-                    return;
-                }
-
-                activeFiltersDiv!.classList.remove('hidden');
-                clearFiltersBtn!.classList.remove('hidden');
-
-                activeFilters.forEach(filter => {
-                    const [type, value] = filter.split(':');
-                    const chip = document.createElement('div');
-                    chip.className = 'filter-chip';
-                    chip.innerHTML = `
-                        ${value.charAt(0).toUpperCase() + value.slice(1)}
-                        <button aria-label="Remove ${value} filter">×</button>
-                    `;
-                    chip.querySelector('button')!.addEventListener('click', () => {
-                        activeFilters.delete(filter);
-                        filterButtons.forEach(btn => {
-                            if (btn.getAttribute('data-filter') === value) {
-                                btn.classList.remove('active');
-                                btn.setAttribute('aria-pressed', 'false');
-                            }
-                        });
-                        updateFilters();
-                    });
-                    activeFiltersDiv!.appendChild(chip);
-                });
-            }
-
-            function updateFilters() {
-                const searchTerm = searchBar!.value.toLowerCase();
+            function filterAims() {
+                const searchTerm = searchBar.value.toLowerCase();
+                const difficultyTerm = difficultyFilter.value.toLowerCase();
                 let visibleCount = 0;
 
                 allAims.forEach(aim => {
-                    const anchorTag = aim.querySelector('a');
-                    const title = anchorTag ? anchorTag.textContent?.toLowerCase() : '';
-                    const tagsAttribute = (aim as HTMLElement).dataset.tags;
-                    const tags = tagsAttribute ? tagsAttribute.toLowerCase().split(',') : [];
-                    const difficulty = (aim as HTMLElement).dataset.difficulty || '';
+                    const title = aim.textContent?.toLowerCase() || '';
+                    const difficulty = aim.getAttribute('data-difficulty') || '';
 
-                    const matchesSearch = title!.includes(searchTerm);
-                    let matchesFilter = true;
+                    const matchesSearch = title.includes(searchTerm);
+                    const matchesDifficulty = !difficultyTerm || difficulty === difficultyTerm;
 
-                    if (activeFilters.size > 0) {
-                        matchesFilter = Array.from(activeFilters).some(filter => {
-                            const [type, value] = filter.split(':');
-                            if (type === 'difficulty') {
-                                return difficulty === value;
-                            } else if (type === 'tag') {
-                                return tags.includes(value);
-                            }
-                            return false;
-                        });
-                    }
-
-                    if (matchesSearch && matchesFilter) {
-                        aim.classList.remove('hidden');
+                    if (matchesSearch && matchesDifficulty) {
+                        (aim as HTMLElement).style.display = '';
                         visibleCount++;
                     } else {
-                        aim.classList.add('hidden');
+                        (aim as HTMLElement).style.display = 'none';
                     }
                 });
-
-                // Update results count
-                resultsCount!.textContent = `Showing ${visibleCount} of ${allAims.length} challenges`;
 
                 // Show/hide no results message
                 if (visibleCount === 0) {
-                    noResultsDiv!.classList.remove('hidden');
+                    (noResultsDiv as HTMLElement)!.style.display = 'block';
                 } else {
-                    noResultsDiv!.classList.add('hidden');
+                    (noResultsDiv as HTMLElement)!.style.display = 'none';
                 }
-
-                updateActiveFiltersDisplay();
             }
 
-            clearFiltersBtn!.addEventListener('click', () => {
-                activeFilters.clear();
-                filterButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.setAttribute('aria-pressed', 'false');
-                });
-                searchBar!.value = '';
-                updateFilters();
-            });
+            searchBar.addEventListener('keyup', filterAims);
+            difficultyFilter.addEventListener('change', filterAims);
 
-            resetFiltersBtn!.addEventListener('click', () => {
-                activeFilters.clear();
-                filterButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.setAttribute('aria-pressed', 'false');
-                });
-                searchBar!.value = '';
-                updateFilters();
+            resetBtn?.addEventListener('click', () => {
+                searchBar.value = '';
+                difficultyFilter.value = '';
+                filterAims();
             });
-
-            searchBar!.addEventListener('keyup', updateFilters);
         });
     </script>
 </BaseLayout>
