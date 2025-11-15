@@ -1,15 +1,15 @@
 ---
 // src/components/AimNavigation.astro
-const { aimNumber } = Astro.props;
+const { aimNumber, coursePath = '/aims', totalAims = 100 } = Astro.props;
 const currentAim = Number(aimNumber);
 
-const prevLink = currentAim > 1 ? `/aims/${currentAim - 1}` : null;
-const nextLink = currentAim < 100 ? `/aims/${currentAim + 1}` : null;
+const prevLink = currentAim > 0 ? `${coursePath}/${currentAim - 1}` : null;
+const nextLink = currentAim < (totalAims - 1) ? `${coursePath}/${currentAim + 1}` : null;
 ---
 <nav class="aim-navigation">
     {prevLink && <a href={prevLink} class="nav-button prev">← Previous Aim</a>}
     
-    <a href="/aims" class="nav-button home">Back to All Aims</a>
+    <a href={coursePath} class="nav-button home">Back to All Aims</a>
     
     {nextLink && <a href={nextLink} class="nav-button next">Next Aim →</a>}
 </nav>

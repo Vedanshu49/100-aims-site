@@ -43,7 +43,7 @@ const progressPercent = Math.round((aimNumber / totalAims) * 100);
         <!-- Back Button -->
         <div class="mb-8">
             <a href={coursePath} class="inline-flex items-center transition-colors duration-300 font-medium" style={{color: courseColor}}>
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg style={{width: '20px', height: '20px', marginRight: '8px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
                 Back to {courseName}
@@ -161,41 +161,53 @@ const progressPercent = Math.round((aimNumber / totalAims) * 100);
 
         <!-- Full Width Navigation -->
         <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <AimNavigation aimNumber={aimNumber} />
+            <AimNavigation aimNumber={aimNumber} coursePath={coursePath} totalAims={totalAims} />
         </div>
     </div>
 
     <script is:inline>
         document.addEventListener('DOMContentLoaded', () => {
-            // Code block copy functionality
-            const codeBlocks = document.querySelectorAll('pre code');
+            // Code block copy functionality - enhanced to handle Astro markdown rendering
+            const codeBlocks = document.querySelectorAll('pre');
 
-            codeBlocks.forEach(codeBlock => {
-                const pre = codeBlock.parentNode;
-                if (pre.tagName === 'PRE') {
-                    const container = document.createElement('div');
-                    container.classList.add('code-block-container');
-                    pre.parentNode.insertBefore(container, pre);
-                    container.appendChild(pre);
+            codeBlocks.forEach(pre => {
+                // Get the code element inside pre
+                const code = pre.querySelector('code');
+                if (!code) return;
 
-                    const copyButton = document.createElement('button');
-                    copyButton.classList.add('copy-button');
-                    copyButton.textContent = 'Copy';
-                    copyButton.setAttribute('aria-label', 'Copy code to clipboard');
-                    container.appendChild(copyButton);
+                const container = document.createElement('div');
+                container.classList.add('code-block-container');
+                pre.parentNode.insertBefore(container, pre);
+                container.appendChild(pre);
 
-                    copyButton.addEventListener('click', () => {
-                        const codeToCopy = codeBlock.textContent;
-                        navigator.clipboard.writeText(codeToCopy).then(() => {
-                            copyButton.textContent = 'Copied!';
-                            setTimeout(() => {
-                                copyButton.textContent = 'Copy';
-                            }, 2000);
-                        }).catch(err => {
-                            console.error('Failed to copy: ', err);
-                        });
+                const copyButton = document.createElement('button');
+                copyButton.classList.add('copy-button');
+                copyButton.textContent = 'Copy';
+                copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+                copyButton.setAttribute('type', 'button');
+                container.appendChild(copyButton);
+
+                copyButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const codeToCopy = code.textContent || code.innerText;
+                    if (!codeToCopy) {
+                        console.error('No code content found');
+                        return;
+                    }
+                    
+                    navigator.clipboard.writeText(codeToCopy).then(() => {
+                        copyButton.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyButton.textContent = 'Copy';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                        copyButton.textContent = 'Copy Failed';
+                        setTimeout(() => {
+                            copyButton.textContent = 'Copy';
+                        }, 2000);
                     });
-                }
+                });
             });
 
             // Complete button functionality

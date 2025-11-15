@@ -245,6 +245,13 @@ html.dark .moon-icon {
     color: var(--primary-blue);
 }
 
+.disabled-link {
+    color: var(--border-color);
+    font-size: var(--font-sm);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 .footer-divider {
     height: 1px;
     background-color: var(--border-color);
