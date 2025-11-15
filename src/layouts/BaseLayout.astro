@@ -17,13 +17,15 @@ import '../styles/global.css';
 <body>
     <header class="site-header">
         <div class="header-content">
-            <a href="/" class="site-title">CodeQuests</a>
-            <nav class="header-nav">
-                <a href="/" aria-label="Home">Home</a>
-                <a href="/aims" aria-label="All Challenges">Challenges</a>
-                <a href="/collections" aria-label="Collections">Collections</a>
-                <a href="/#about" aria-label="About">About</a>
-            </nav>
+            <div class="header-left">
+                <a href="/" class="site-title">CodeQuests</a>
+                <nav class="header-nav">
+                    <a href="/" aria-label="Home">Home</a>
+                    <a href="/collections" aria-label="Collections">Collections</a>
+                    <a href="/aims" aria-label="Python Challenges" title="Python Programming - 100 Challenges">Python</a>
+                    <a href="/html-aims" aria-label="HTML Challenges" title="Web Development: HTML - 50 Challenges">HTML</a>
+                </nav>
+            </div>
             <div class="header-controls">
                 <button id="theme-toggle" class="theme-toggle-button" aria-label="Toggle dark mode">
                     <span class="sun-icon" aria-hidden="true">

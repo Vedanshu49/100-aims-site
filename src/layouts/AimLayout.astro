@@ -7,6 +7,15 @@ import AimNavigation from '../components/AimNavigation.astro';
 const { frontmatter } = Astro.props;
 const { aimNumber, tags = [] } = frontmatter;
 
+// Determine course from URL path
+const url = new URL(Astro.request.url);
+const isHtmlCourse = url.pathname.includes('/html-aims/');
+const courseName = isHtmlCourse ? 'Web Development: HTML' : 'Python Programming';
+const courseIcon = isHtmlCourse ? '🌐' : '🐍';
+const coursePath = isHtmlCourse ? '/html-aims' : '/aims';
+const totalAims = isHtmlCourse ? 50 : 100;
+const courseColor = isHtmlCourse ? 'var(--course-html-primary)' : 'var(--course-python-primary)';
+
 // Calculate difficulty
 let difficulty = 'Beginner';
 if (aimNumber > 50) difficulty = 'Advanced';
@@ -14,8 +23,9 @@ else if (aimNumber > 25) difficulty = 'Intermediate';
 
 // Calculate related aims (next/previous)
 const previousAim = aimNumber > 0 ? aimNumber - 1 : null;
-const nextAim = aimNumber < 99 ? aimNumber + 1 : null;
+const nextAim = aimNumber < (totalAims - 1) ? aimNumber + 1 : null;
 const estimatedTime = `${5 + (aimNumber % 20)} min`;
+const progressPercent = Math.round((aimNumber / totalAims) * 100);
 ---
 <BaseLayout>
     <div class="max-w-7xl mx-auto px-4 md:px-8 w-full">
@@ -23,18 +33,20 @@ const estimatedTime = `${5 + (aimNumber % 20)} min`;
         <div class="mb-6 text-sm" aria-label="Breadcrumb">
             <a href="/" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">Home</a>
             <span class="mx-2 text-gray-400">/</span>
-            <a href="/aims" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">Challenges</a>
+            <a href="/collections" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">Collections</a>
             <span class="mx-2 text-gray-400">/</span>
-            <span class="text-gray-600 dark:text-gray-400">Challenge #{aimNumber.toString().padStart(3, '0')}</span>
+            <a href={coursePath} style={{color: courseColor}} class="hover:opacity-80 transition-opacity">{courseIcon} {courseName}</a>
+            <span class="mx-2 text-gray-400">/</span>
+            <span class="text-gray-600 dark:text-gray-400">Aim #{aimNumber.toString().padStart(2, '0')}</span>
         </div>
 
         <!-- Back Button -->
         <div class="mb-8">
-            <a href="/aims" class="inline-flex items-center text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300 font-medium">
+            <a href={coursePath} class="inline-flex items-center transition-colors duration-300 font-medium" style={{color: courseColor}}>
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
-                Back to Challenges
+                Back to {courseName}
             </a>
         </div>
 
@@ -57,12 +69,24 @@ const estimatedTime = `${5 + (aimNumber % 20)} min`;
 
             <!-- Sidebar -->
             <aside class="aim-sidebar">
+                <!-- Course Context -->
+                <div class="sidebar-section" style={{borderColor: courseColor, borderLeft: `4px solid ${courseColor}`}}>
+                    <h4 style={{color: courseColor}}>{courseIcon} {courseName}</h4>
+                    <div class="aim-info-item">
+                        <span class="info-label">Progress</span>
+                        <div style={{width: '100%', height: '8px', backgroundColor: 'var(--border-color)', borderRadius: '4px', overflow: 'hidden'}}>
+                            <div style={{width: `${progressPercent}%`, height: '100%', backgroundColor: courseColor, transition: 'width 0.3s ease'}}></div>
+                        </div>
+                        <span class="info-value text-xs">{aimNumber + 1} of {totalAims}</span>
+                    </div>
+                </div>
+
                 <!-- Challenge Info -->
                 <div class="sidebar-section">
                     <h4>Challenge Info</h4>
                     <div class="aim-info-item">
-                        <span class="info-label">Challenge #</span>
-                        <span class="info-value">{aimNumber.toString().padStart(3, '0')}</span>
+                        <span class="info-label">Aim #</span>
+                        <span class="info-value">{aimNumber.toString().padStart(2, '0')}</span>
                     </div>
                     <div class="aim-info-item">
                         <span class="info-label">Difficulty</span>
@@ -79,7 +103,7 @@ const estimatedTime = `${5 + (aimNumber % 20)} min`;
                 </div>
 
                 <!-- Mark as Complete Button -->
-                <button class="complete-btn" id="complete-btn" aria-label="Mark this challenge as complete">
+                <button class="complete-btn" id="complete-btn" style={{backgroundColor: courseColor}} aria-label="Mark this challenge as complete">
                     ✓ Mark Complete
                 </button>
 
@@ -105,18 +129,23 @@ const estimatedTime = `${5 + (aimNumber % 20)} min`;
                     <div class="space-y-2">
                         {previousAim !== null && (
                             <div class="related-aim">
-                                <a href={`/aims/${previousAim}`} title="Previous challenge">
-                                    ← #{previousAim.toString().padStart(3, '0')}
+                                <a href={`${coursePath}/${previousAim}`} title="Previous challenge">
+                                    ← Aim #{previousAim.toString().padStart(2, '0')}
                                 </a>
                             </div>
                         )}
                         {nextAim !== null && (
                             <div class="related-aim">
-                                <a href={`/aims/${nextAim}`} title="Next challenge">
-                                    #{nextAim.toString().padStart(3, '0')} →
+                                <a href={`${coursePath}/${nextAim}`} title="Next challenge">
+                                    Aim #{nextAim.toString().padStart(2, '0')} →
                                 </a>
                             </div>
                         )}
+                        <div class="related-aim">
+                            <a href={coursePath} title="View all challenges">
+                                View All {courseName}
+                            </a>
+                        </div>
                     </div>
                 </div>
 
