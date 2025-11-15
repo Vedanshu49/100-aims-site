@@ -11,86 +11,285 @@ const aims = allAims.map(aim => {
   const rawTitle = aim.frontmatter.title;
   // Remove leading "X. " if present
   const cleanedTitle = rawTitle ? rawTitle.replace(/^\d+\.\s*/, '').replace('#','') : '';
+  
+  // Determine difficulty level based on aim number
+  let difficulty = 'Beginner';
+  if (aim.frontmatter.aimNumber > 50) difficulty = 'Advanced';
+  else if (aim.frontmatter.aimNumber > 25) difficulty = 'Intermediate';
+  
   return {
     aimNumber: aim.frontmatter.aimNumber,
     title: cleanedTitle,
-    tags: aim.frontmatter.tags || [], // Ensure tags is an array, even if missing
+    tags: aim.frontmatter.tags || [],
+    difficulty: difficulty,
+    estimatedTime: `${5 + (aim.frontmatter.aimNumber % 20)} min`
   };
 });
 
 // Extract unique tags for filter buttons
 const allTags: string[] = ["Beginner", "Concepts", "List", "Set", "Tuple", "Dictionary", "Function", "Loop", "StringSlicing", "Intermediate", "Recursion", "NumPy", "Pandas", "File IO", "Matplotlib", "Visualization"];
 ---
-<BaseLayout mainClass="site-main-centered">
-    <div class="max-w-7xl mx-auto px-8">
-        <div class="text-center">
-            <h1 class="text-5xl font-bold mb-4 text-gray-900 dark:text-gray-100">100 Python Aims</h1>
-            <p class="text-xl leading-relaxed text-gray-600 dark:text-gray-400 mb-8">A collection of 100 Python programming challenges.</p>
+<BaseLayout>
+    <div class="max-w-7xl mx-auto px-4 md:px-8 w-full">
+        <div class="text-center mb-8">
+            <h1 class="text-5xl font-bold mb-4 text-gray-900 dark:text-gray-100">100 Python Challenges</h1>
+            <p class="text-xl leading-relaxed text-gray-600 dark:text-gray-400">Master Python programming with our curated collection of challenges, from beginner to advanced level.</p>
         </div>
 
+        <!-- Search Bar -->
         <div class="my-8">
-            <input type="text" id="search-bar" placeholder="Search aims..."
-                class="w-full p-4 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 transition-all duration-300 mb-4">
-            <select id="filter-dropdown" class="w-full p-4 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 transition-all duration-300">
-                <option value="">All</option>
-                {allTags.map((tag: string) => (
-                    <option value={tag.toLowerCase()}>{tag}</option>
-                ))}
-            </select>
+            <input type="text" id="search-bar" placeholder="Search challenges by name or topic..."
+                class="w-full p-4 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 transition-all duration-300 mb-4" 
+                aria-label="Search challenges">
         </div>
 
-        <div id="aims-list" class="grid w-full gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Filter Pills -->
+        <div class="my-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Filter by difficulty & topic:</h2>
+                <button id="clear-filters" class="clear-filters-btn hidden" aria-label="Clear all filters">Clear All</button>
+            </div>
+            <div class="filter-buttons-container" role="group" aria-label="Filter options">
+                {["Beginner", "Intermediate", "Advanced"].map((difficulty: string) => (
+                    <button class="filter-btn" data-filter={difficulty.toLowerCase()} data-type="difficulty" aria-pressed="false">
+                        {difficulty}
+                    </button>
+                ))}
+                {allTags.slice(2).map((tag: string) => (
+                    <button class="filter-btn" data-filter={tag.toLowerCase()} data-type="tag" aria-pressed="false">
+                        {tag}
+                    </button>
+                ))}
+            </div>
+        </div>
+
+        <!-- Active Filters Display -->
+        <div id="active-filters" class="active-filters hidden" aria-live="polite" aria-label="Active filters"></div>
+
+        <!-- Results count -->
+        <div class="mb-6 text-sm text-gray-600 dark:text-gray-400">
+            <span id="results-count">Showing 100 challenges</span>
+        </div>
+
+        <!-- Aims Grid -->
+        <div id="aims-list" class="aims-list" role="list">
             {aims.map((aim) => (
-                <div data-tags={aim.tags.join(',')} class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden">
-                    <a href={`/aims/${aim.aimNumber}`} class="block p-8 text-gray-800 dark:text-gray-100 font-semibold text-2xl no-underline hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">
-                        {`${aim.title}`}
+                <div data-tags={aim.tags.join(',')} data-difficulty={aim.difficulty.toLowerCase()} class="aim-card" role="listitem">
+                    <div class="aim-card-header">
+                        <span class="aim-number">Challenge #{aim.aimNumber.toString().padStart(3, '0')}</span>
+                        <button class="favorite-btn" data-aim-id={aim.aimNumber} aria-label={`Add challenge ${aim.aimNumber} to favorites`} title="Add to favorites">
+                            ♡
+                        </button>
+                    </div>
+                    <a href={`/aims/${aim.aimNumber}`} class="aim-link">
+                        {aim.title}
                     </a>
-                    <div class="px-8 pb-6 text-sm text-gray-600 dark:text-gray-400">
+                    <div class="aim-metadata">
+                        <span class="metadata-item">
+                            <span class={`difficulty-badge difficulty-${aim.difficulty.toLowerCase()}`}>{aim.difficulty}</span>
+                        </span>
+                        <span class="metadata-item" title="Estimated time">
+                            ⏱️ {aim.estimatedTime}
+                        </span>
+                    </div>
+                    <div class="aim-tags">
                         {aim.tags.map((tag: string) => (
-                            <span class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full mr-2 mb-2 dark:bg-blue-900 dark:text-blue-200 font-medium">{tag}</span>
+                            <span class="tag-pill" data-tag={tag.toLowerCase()} role="button" tabindex="0">
+                                {tag}
+                            </span>
                         ))}
                     </div>
                 </div>
             ))}
+        </div>
+
+        <!-- No Results Message -->
+        <div id="no-results" class="text-center py-12 hidden">
+            <p class="text-xl text-gray-600 dark:text-gray-400 mb-4">No challenges match your search criteria.</p>
+            <button id="reset-filters-btn" class="action-button">Reset Filters</button>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchBar = document.getElementById('search-bar') as HTMLInputElement;
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const tagPills = document.querySelectorAll('.tag-pill');
+            const favoriteBtns = document.querySelectorAll('.favorite-btn');
             const aimsList = document.getElementById('aims-list');
-            const filterDropdown = document.getElementById('filter-dropdown') as HTMLSelectElement;
+            const activeFiltersDiv = document.getElementById('active-filters');
+            const clearFiltersBtn = document.getElementById('clear-filters');
+            const resultsCount = document.getElementById('results-count');
+            const noResultsDiv = document.getElementById('no-results');
+            const resetFiltersBtn = document.getElementById('reset-filters-btn');
 
-            if (!aimsList || !searchBar || !filterDropdown) {
-                console.error('Required elements not found: aimsList, searchBar, or filterDropdown');
-                return;
+            if (!aimsList || !searchBar) return;
+
+            const allAims = Array.from(aimsList.querySelectorAll('div[data-tags]'));
+            const activeFilters = new Set<string>();
+            const favorites = new Set<string>(JSON.parse(localStorage.getItem('favorites') || '[]'));
+
+            // Update favorite buttons on load
+            favoriteBtns.forEach(btn => {
+                const aimId = btn.getAttribute('data-aim-id');
+                if (favorites.has(aimId!)) {
+                    btn.classList.add('favorited');
+                }
+            });
+
+            // Handle favorite button clicks
+            favoriteBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const aimId = btn.getAttribute('data-aim-id')!;
+                    if (favorites.has(aimId)) {
+                        favorites.delete(aimId);
+                        btn.classList.remove('favorited');
+                    } else {
+                        favorites.add(aimId);
+                        btn.classList.add('favorited');
+                    }
+                    localStorage.setItem('favorites', JSON.stringify(Array.from(favorites)));
+                });
+            });
+
+            // Handle filter button clicks
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filter = btn.getAttribute('data-filter')!;
+                    const type = btn.getAttribute('data-type')!;
+                    const filterKey = `${type}:${filter}`;
+
+                    if (activeFilters.has(filterKey)) {
+                        activeFilters.delete(filterKey);
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-pressed', 'false');
+                    } else {
+                        activeFilters.add(filterKey);
+                        btn.classList.add('active');
+                        btn.setAttribute('aria-pressed', 'true');
+                    }
+                    updateFilters();
+                });
+            });
+
+            // Handle tag clicks
+            tagPills.forEach(tag => {
+                tag.addEventListener('click', () => {
+                    const tagValue = tag.getAttribute('data-tag')!;
+                    const filterKey = `tag:${tagValue}`;
+
+                    if (activeFilters.has(filterKey)) {
+                        activeFilters.delete(filterKey);
+                    } else {
+                        activeFilters.add(filterKey);
+                    }
+                    updateFilters();
+                });
+            });
+
+            function updateActiveFiltersDisplay() {
+                activeFiltersDiv!.innerHTML = '';
+                
+                if (activeFilters.size === 0) {
+                    activeFiltersDiv!.classList.add('hidden');
+                    clearFiltersBtn!.classList.add('hidden');
+                    return;
+                }
+
+                activeFiltersDiv!.classList.remove('hidden');
+                clearFiltersBtn!.classList.remove('hidden');
+
+                activeFilters.forEach(filter => {
+                    const [type, value] = filter.split(':');
+                    const chip = document.createElement('div');
+                    chip.className = 'filter-chip';
+                    chip.innerHTML = `
+                        ${value.charAt(0).toUpperCase() + value.slice(1)}
+                        <button aria-label="Remove ${value} filter">×</button>
+                    `;
+                    chip.querySelector('button')!.addEventListener('click', () => {
+                        activeFilters.delete(filter);
+                        filterButtons.forEach(btn => {
+                            if (btn.getAttribute('data-filter') === value) {
+                                btn.classList.remove('active');
+                                btn.setAttribute('aria-pressed', 'false');
+                            }
+                        });
+                        updateFilters();
+                    });
+                    activeFiltersDiv!.appendChild(chip);
+                });
             }
 
-            const allAims = Array.from(aimsList!.querySelectorAll('div[data-tags]'));
-
-            function filterAims() {
+            function updateFilters() {
                 const searchTerm = searchBar!.value.toLowerCase();
-                const selectedTag = filterDropdown!.value.toLowerCase();
+                let visibleCount = 0;
 
                 allAims.forEach(aim => {
                     const anchorTag = aim.querySelector('a');
                     const title = anchorTag ? anchorTag.textContent?.toLowerCase() : '';
                     const tagsAttribute = (aim as HTMLElement).dataset.tags;
                     const tags = tagsAttribute ? tagsAttribute.toLowerCase().split(',') : [];
+                    const difficulty = (aim as HTMLElement).dataset.difficulty || '';
 
-                    const matchesSearch = title.includes(searchTerm);
-                    const matchesFilter = selectedTag === '' || tags.includes(selectedTag);
+                    const matchesSearch = title!.includes(searchTerm);
+                    let matchesFilter = true;
+
+                    if (activeFilters.size > 0) {
+                        matchesFilter = Array.from(activeFilters).some(filter => {
+                            const [type, value] = filter.split(':');
+                            if (type === 'difficulty') {
+                                return difficulty === value;
+                            } else if (type === 'tag') {
+                                return tags.includes(value);
+                            }
+                            return false;
+                        });
+                    }
 
                     if (matchesSearch && matchesFilter) {
-                         aim.classList.remove('hidden');
+                        aim.classList.remove('hidden');
+                        visibleCount++;
                     } else {
                         aim.classList.add('hidden');
                     }
                 });
+
+                // Update results count
+                resultsCount!.textContent = `Showing ${visibleCount} of ${allAims.length} challenges`;
+
+                // Show/hide no results message
+                if (visibleCount === 0) {
+                    noResultsDiv!.classList.remove('hidden');
+                } else {
+                    noResultsDiv!.classList.add('hidden');
+                }
+
+                updateActiveFiltersDisplay();
             }
 
-            searchBar!.addEventListener('keyup', filterAims);
-            filterDropdown!.addEventListener('change', filterAims);
+            clearFiltersBtn!.addEventListener('click', () => {
+                activeFilters.clear();
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                searchBar!.value = '';
+                updateFilters();
+            });
+
+            resetFiltersBtn!.addEventListener('click', () => {
+                activeFilters.clear();
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                searchBar!.value = '';
+                updateFilters();
+            });
+
+            searchBar!.addEventListener('keyup', updateFilters);
         });
     </script>
 </BaseLayout>

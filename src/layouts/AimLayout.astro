@@ -5,53 +5,217 @@ import AimNavigation from '../components/AimNavigation.astro';
 
 // The aimNumber is passed from the frontmatter of the .md file
 const { frontmatter } = Astro.props;
-const { aimNumber } = frontmatter;
+const { aimNumber, tags = [] } = frontmatter;
+
+// Calculate difficulty
+let difficulty = 'Beginner';
+if (aimNumber > 50) difficulty = 'Advanced';
+else if (aimNumber > 25) difficulty = 'Intermediate';
+
+// Calculate related aims (next/previous)
+const previousAim = aimNumber > 0 ? aimNumber - 1 : null;
+const nextAim = aimNumber < 99 ? aimNumber + 1 : null;
+const estimatedTime = `${5 + (aimNumber % 20)} min`;
 ---
 <BaseLayout>
-    <div class="aim-header mb-8">
-        <a href="/aims" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300">&larr; Back to Aims</a>
-        <h1 class="text-4xl font-bold mt-4 text-gray-900 dark:text-gray-100">{frontmatter.title}</h1>
+    <div class="max-w-7xl mx-auto px-4 md:px-8 w-full">
+        <!-- Breadcrumb -->
+        <div class="mb-6 text-sm" aria-label="Breadcrumb">
+            <a href="/" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">Home</a>
+            <span class="mx-2 text-gray-400">/</span>
+            <a href="/aims" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">Challenges</a>
+            <span class="mx-2 text-gray-400">/</span>
+            <span class="text-gray-600 dark:text-gray-400">Challenge #{aimNumber.toString().padStart(3, '0')}</span>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mb-8">
+            <a href="/aims" class="inline-flex items-center text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-300 font-medium">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Back to Challenges
+            </a>
+        </div>
+
+        <!-- Main Content Area with Sidebar -->
+        <div class="aim-page-container">
+            <!-- Main Content -->
+            <main class="aim-content prose dark:prose-invert max-w-none">
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{frontmatter.title}</h1>
+                <div class="flex flex-wrap gap-4 mb-8 pb-8 border-b border-gray-200 dark:border-gray-700">
+                    <span class={`difficulty-badge difficulty-${difficulty.toLowerCase()}`}>{difficulty}</span>
+                    <span class="text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        {estimatedTime}
+                    </span>
+                </div>
+                <slot />
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="aim-sidebar">
+                <!-- Challenge Info -->
+                <div class="sidebar-section">
+                    <h4>Challenge Info</h4>
+                    <div class="aim-info-item">
+                        <span class="info-label">Challenge #</span>
+                        <span class="info-value">{aimNumber.toString().padStart(3, '0')}</span>
+                    </div>
+                    <div class="aim-info-item">
+                        <span class="info-label">Difficulty</span>
+                        <span class={`info-value difficulty-badge difficulty-${difficulty.toLowerCase()}`}>{difficulty}</span>
+                    </div>
+                    <div class="aim-info-item">
+                        <span class="info-label">Est. Time</span>
+                        <span class="info-value">{estimatedTime}</span>
+                    </div>
+                    <div class="aim-info-item">
+                        <span class="info-label">Topics</span>
+                        <span class="info-value">{tags.length}</span>
+                    </div>
+                </div>
+
+                <!-- Mark as Complete Button -->
+                <button class="complete-btn" id="complete-btn" aria-label="Mark this challenge as complete">
+                    ✓ Mark Complete
+                </button>
+
+                <!-- Topics -->
+                {tags.length > 0 && (
+                    <div class="sidebar-section">
+                        <h4>Topics Covered</h4>
+                        <div class="space-y-2">
+                            {tags.map((tag: string) => (
+                                <div class="related-aim">
+                                    <a href={`/aims?tag=${tag.toLowerCase()}`}>
+                                        {tag}
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <!-- Navigation -->
+                <div class="sidebar-section">
+                    <h4>Navigation</h4>
+                    <div class="space-y-2">
+                        {previousAim !== null && (
+                            <div class="related-aim">
+                                <a href={`/aims/${previousAim}`} title="Previous challenge">
+                                    ← #{previousAim.toString().padStart(3, '0')}
+                                </a>
+                            </div>
+                        )}
+                        {nextAim !== null && (
+                            <div class="related-aim">
+                                <a href={`/aims/${nextAim}`} title="Next challenge">
+                                    #{nextAim.toString().padStart(3, '0')} →
+                                </a>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="sidebar-section">
+                    <h4>Actions</h4>
+                    <button class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-center text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" id="share-btn" aria-label="Share this challenge">
+                        📤 Share
+                    </button>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Full Width Navigation -->
+        <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <AimNavigation aimNumber={aimNumber} />
+        </div>
     </div>
-    <div class="prose dark:prose-invert max-w-none">
-        <slot />
-    </div>
-    <AimNavigation aimNumber={aimNumber} />
 
     <script is:inline>
         document.addEventListener('DOMContentLoaded', () => {
+            // Code block copy functionality
             const codeBlocks = document.querySelectorAll('pre code');
 
             codeBlocks.forEach(codeBlock => {
                 const pre = codeBlock.parentNode;
-     
-                           if (pre.tagName === 'PRE') {
+                if (pre.tagName === 'PRE') {
                     const container = document.createElement('div');
-                    container.classList.add('code-block-container'); // Custom class for container
+                    container.classList.add('code-block-container');
                     pre.parentNode.insertBefore(container, pre);
-                
                     container.appendChild(pre);
 
                     const copyButton = document.createElement('button');
-                    copyButton.classList.add('copy-button'); // Custom class for button
+                    copyButton.classList.add('copy-button');
                     copyButton.textContent = 'Copy';
+                    copyButton.setAttribute('aria-label', 'Copy code to clipboard');
                     container.appendChild(copyButton);
 
-      
-                              copyButton.addEventListener('click', () => {
+                    copyButton.addEventListener('click', () => {
                         const codeToCopy = codeBlock.textContent;
                         navigator.clipboard.writeText(codeToCopy).then(() => {
                             copyButton.textContent = 'Copied!';
                             setTimeout(() => {
                                 copyButton.textContent = 'Copy';
-    
-                                        }, 2000);
+                            }, 2000);
                         }).catch(err => {
                             console.error('Failed to copy: ', err);
-                 
-                       });
+                        });
                     });
                 }
             });
-       });
+
+            // Complete button functionality
+            const completeBtn = document.getElementById('complete-btn');
+            const aimNumber = window.location.pathname.split('/').pop();
+            const completedChallenges = new Set(JSON.parse(localStorage.getItem('completed') || '[]'));
+
+            if (completeBtn) {
+                if (completedChallenges.has(aimNumber)) {
+                    completeBtn.classList.add('completed');
+                    completeBtn.textContent = '✓ Completed';
+                }
+
+                completeBtn.addEventListener('click', () => {
+                    if (completedChallenges.has(aimNumber)) {
+                        completedChallenges.delete(aimNumber);
+                        completeBtn.classList.remove('completed');
+                        completeBtn.textContent = '✓ Mark Complete';
+                    } else {
+                        completedChallenges.add(aimNumber);
+                        completeBtn.classList.add('completed');
+                        completeBtn.textContent = '✓ Completed';
+                    }
+                    localStorage.setItem('completed', JSON.stringify(Array.from(completedChallenges)));
+                });
+            }
+
+            // Share button functionality
+            const shareBtn = document.getElementById('share-btn');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', () => {
+                    const currentUrl = window.location.href;
+                    const title = document.querySelector('h1')?.textContent || 'Check out this challenge';
+                    
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'CodeQuests Challenge',
+                            text: title,
+                            url: currentUrl
+                        }).catch(err => console.log('Share failed:', err));
+                    } else {
+                        navigator.clipboard.writeText(currentUrl);
+                        shareBtn.textContent = '✓ Link Copied';
+                        setTimeout(() => {
+                            shareBtn.textContent = '📤 Share';
+                        }, 2000);
+                    }
+                });
+            }
+        });
     </script>
 </BaseLayout>

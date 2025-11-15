@@ -3,8 +3,51 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout>
     <div class="welcome-section">
-        <h1 class="welcome-title">Welcome to CodeQuests</h1>
-        <p class="welcome-byline">Your journey to mastering code starts here.</p>
-        <a href="/collections" class="action-button">Get Started</a>
+        <div class="hero-gradient"></div>
+        <div class="hero-content">
+            <h1 class="welcome-title">Welcome to CodeQuests</h1>
+            <p class="welcome-byline">Your journey to mastering code starts here.</p>
+            
+            <div class="hero-features">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-text">
+                        <h3>100 Challenges</h3>
+                        <p>Carefully curated Python programming challenges</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <div class="feature-text">
+                        <h3>Beginner to Advanced</h3>
+                        <p>Progress at your own pace with difficulty levels</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <h3>Interactive Learning</h3>
+                        <p>Learn by doing with hands-on practice</p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="/aims" class="action-button">Explore Challenges</a>
+        </div>
+
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-number">100</div>
+                <div class="stat-label">Challenges</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">16</div>
+                <div class="stat-label">Topics</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Levels</div>
+            </div>
+        </div>
     </div>
 </BaseLayout>
