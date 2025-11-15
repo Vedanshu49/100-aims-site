@@ -7,22 +7,25 @@ const allAims = await Astro.glob('./aims/*.md');
 allAims.sort((a, b) => a.frontmatter.aimNumber - b.frontmatter.aimNumber);
 
 // Prepare aims data with title, aimNumber, and tags
-const aims = allAims.map(aim => {
+const aims = allAims.map((aim, index) => {
   const rawTitle = aim.frontmatter.title;
   // Remove leading "X. " if present
   const cleanedTitle = rawTitle ? rawTitle.replace(/^\d+\.\s*/, '').replace('#','') : '';
   
+  // Use frontmatter aimNumber or fallback to index
+  const aimNumber = aim.frontmatter.aimNumber !== undefined ? aim.frontmatter.aimNumber : index;
+  
   // Determine difficulty level based on aim number
   let difficulty = 'Beginner';
-  if (aim.frontmatter.aimNumber > 50) difficulty = 'Advanced';
-  else if (aim.frontmatter.aimNumber > 25) difficulty = 'Intermediate';
+  if (aimNumber > 50) difficulty = 'Advanced';
+  else if (aimNumber > 25) difficulty = 'Intermediate';
   
   return {
-    aimNumber: aim.frontmatter.aimNumber,
+    aimNumber: aimNumber,
     title: cleanedTitle,
     tags: aim.frontmatter.tags || [],
     difficulty: difficulty,
-    estimatedTime: `${5 + (aim.frontmatter.aimNumber % 20)} min`
+    estimatedTime: `${5 + (aimNumber % 20)} min`
   };
 });
 
@@ -76,7 +79,7 @@ const allTags: string[] = ["Beginner", "Concepts", "List", "Set", "Tuple", "Dict
             {aims.map((aim) => (
                 <div data-tags={aim.tags.join(',')} data-difficulty={aim.difficulty.toLowerCase()} class="aim-card" role="listitem">
                     <div class="aim-card-header">
-                        <span class="aim-number">Challenge #{aim.aimNumber.toString().padStart(3, '0')}</span>
+                        <span class="aim-number">Challenge #{String(aim.aimNumber).padStart(3, '0')}</span>
                         <button class="favorite-btn" data-aim-id={aim.aimNumber} aria-label={`Add challenge ${aim.aimNumber} to favorites`} title="Add to favorites">
                             ♡
                         </button>
