@@ -36,14 +36,14 @@ const aims = allAims.map((aim, index) => {
 <BaseLayout>
     <div class="challenges-page">
         <div class="challenges-header">
-            <h1>🐍 Python Programming</h1>
+            <h1>Python Programming</h1>
             <p>Master Python from variables and loops to OOP and algorithms.
             100 hands-on challenges to build a strong coding foundation.</p>
         </div>
 
         <div class="search-filter-section">
             <div class="search-box">
-                🔍
+                
                 <input type="text" id="search-bar" placeholder="Search challenges..." aria-label="Search Python challenges">
             </div>
             <select id="difficulty-filter" class="filter-select" aria-label="Filter by difficulty">
@@ -64,7 +64,7 @@ const aims = allAims.map((aim, index) => {
                         <span class={`difficulty-badge difficulty-${aim.difficulty.toLowerCase()}`}>
                             {aim.difficulty}
                         </span>
-                        <span>⏱️ {aim.estimatedTime}</span>
+                        <span>{aim.estimatedTime}</span>
                     </div>
                 </a>
             ))}

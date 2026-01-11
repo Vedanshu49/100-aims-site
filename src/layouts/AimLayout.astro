@@ -11,7 +11,7 @@ const { aimNumber, tags = [] } = frontmatter;
 const url = new URL(Astro.request.url);
 const isHtmlCourse = url.pathname.includes('/html-aims/');
 const courseName = isHtmlCourse ? 'Web Development: HTML' : 'Python Programming';
-const courseIcon = isHtmlCourse ? '🌐' : '🐍';
+const courseIcon = isHtmlCourse ? '' : '';
 const coursePath = isHtmlCourse ? '/html-aims' : '/aims';
 const totalAims = isHtmlCourse ? 50 : 100;
 const courseColor = isHtmlCourse ? 'var(--course-html-primary)' : 'var(--course-python-primary)';
@@ -104,7 +104,7 @@ const progressPercent = Math.round((aimNumber / totalAims) * 100);
 
                 <!-- Mark as Complete Button -->
                 <button class="complete-btn" id="complete-btn" style={{backgroundColor: courseColor}} aria-label="Mark this challenge as complete">
-                    ✓ Mark Complete
+                    Mark Complete
                 </button>
 
                 <!-- Topics -->
@@ -130,14 +130,14 @@ const progressPercent = Math.round((aimNumber / totalAims) * 100);
                         {previousAim !== null && (
                             <div class="related-aim">
                                 <a href={`${coursePath}/${previousAim}`} title="Previous challenge">
-                                    ← Aim #{previousAim.toString().padStart(2, '0')}
+                                    Aim #{previousAim.toString().padStart(2, '0')}
                                 </a>
                             </div>
                         )}
                         {nextAim !== null && (
                             <div class="related-aim">
                                 <a href={`${coursePath}/${nextAim}`} title="Next challenge">
-                                    Aim #{nextAim.toString().padStart(2, '0')} →
+                                    Aim #{nextAim.toString().padStart(2, '0')}
                                 </a>
                             </div>
                         )}
@@ -153,7 +153,7 @@ const progressPercent = Math.round((aimNumber / totalAims) * 100);
                 <div class="sidebar-section">
                     <h4>Actions</h4>
                     <button style={{width: '100%', padding: '8px 16px', backgroundColor: 'var(--bg-secondary)', borderRadius: '6px', textAlign: 'center', fontSize: '14px', fontWeight: '500', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s ease'}} id="share-btn" aria-label="Share this challenge">
-                        📤 Share
+                        Share
                     </button>
                 </div>
             </aside>
@@ -218,18 +218,18 @@ const progressPercent = Math.round((aimNumber / totalAims) * 100);
             if (completeBtn) {
                 if (completedChallenges.has(aimNumber)) {
                     completeBtn.classList.add('completed');
-                    completeBtn.textContent = '✓ Completed';
+                    completeBtn.textContent = 'Completed';
                 }
 
                 completeBtn.addEventListener('click', () => {
                     if (completedChallenges.has(aimNumber)) {
                         completedChallenges.delete(aimNumber);
                         completeBtn.classList.remove('completed');
-                        completeBtn.textContent = '✓ Mark Complete';
+                        completeBtn.textContent = 'Mark Complete';
                     } else {
                         completedChallenges.add(aimNumber);
                         completeBtn.classList.add('completed');
-                        completeBtn.textContent = '✓ Completed';
+                        completeBtn.textContent = 'Completed';
                     }
                     localStorage.setItem('completed', JSON.stringify(Array.from(completedChallenges)));
                 });
@@ -250,9 +250,9 @@ const progressPercent = Math.round((aimNumber / totalAims) * 100);
                         }).catch(err => console.log('Share failed:', err));
                     } else {
                         navigator.clipboard.writeText(currentUrl);
-                        shareBtn.textContent = '✓ Link Copied';
+                        shareBtn.textContent = 'Link Copied';
                         setTimeout(() => {
-                            shareBtn.textContent = '📤 Share';
+                            shareBtn.textContent = 'Share';
                         }, 2000);
                     }
                 });

@@ -7,11 +7,11 @@ const prevLink = currentAim > 0 ? `${coursePath}/${currentAim - 1}` : null;
 const nextLink = currentAim < (totalAims - 1) ? `${coursePath}/${currentAim + 1}` : null;
 ---
 <nav class="aim-navigation">
-    {prevLink && <a href={prevLink} class="nav-button prev">← Previous Aim</a>}
+    {prevLink && <a href={prevLink} class="nav-button prev">Previous Aim</a>}
     
     <a href={coursePath} class="nav-button home">Back to All Aims</a>
     
-    {nextLink && <a href={nextLink} class="nav-button next">Next Aim →</a>}
+    {nextLink && <a href={nextLink} class="nav-button next">Next Aim</a>}
 </nav>
 
 <style>
