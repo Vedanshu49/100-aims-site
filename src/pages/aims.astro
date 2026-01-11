@@ -68,6 +68,14 @@ const aims = allAims.map((aim, index) => {
                     </div>
                 </a>
             ))}
+            <a href="/contact" class="challenge-card contact-card">
+                <div class="challenge-number">Say Hello</div>
+                <h3 class="challenge-title">Contact Me</h3>
+                <p class="challenge-description">Have a question or want to connect? Feel free to reach out.</p>
+                <div class="challenge-meta">
+                    <span class="difficulty-badge difficulty-all">All Levels</span>
+                </div>
+            </a>
         </div>
 
         <div id="no-results" style="display: none; text-align: center; padding: 3rem 1rem;">
@@ -127,3 +135,19 @@ const aims = allAims.map((aim, index) => {
         });
     </script>
 </BaseLayout>
+
+<style>
+    .contact-card {
+        background-color: var(--background-secondary);
+        border: 1px solid var(--primary-blue);
+        color: var(--text-primary);
+    }
+    .contact-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    .difficulty-all {
+        background-color: var(--primary-blue);
+        color: white;
+    }
+</style>

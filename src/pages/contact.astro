@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout>
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+                About Me
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400">
+                I'm a passionate web developer with a focus on creating clean, elegant, and efficient solutions. I enjoy turning complex problems into simple, beautiful, and intuitive designs. When I'm not coding, you can find me exploring new technologies or enjoying a good cup of coffee.
+            </p>
+        </div>
+
+        <div class="mt-16 text-center">
+             <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+                Get in Touch
+            </h2>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400">
+                Feel free to reach out. I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
+            </p>
+        </div>
+
+        <div class="mt-12 grid gap-8 sm:grid-cols-2">
+            <a href="https://github.com/vedanshu49" target="_blank" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all group hover:-translate-y-1">
+                <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <img src="/github.svg" class="w-7 h-7 invert dark:invert-0" alt="GitHub" />
+                </div>
+                <div>
+                    <div class="font-bold text-gray-900 dark:text-white">GitHub</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">View Projects</div>
+                </div>
+            </a>
+
+            <a href="https://www.linkedin.com/in/vedanshu-pandey-221a38340" target="_blank" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-[#0077b5]/50 transition-all group hover:-translate-y-1">
+                <div class="w-12 h-12 bg-[#0077b5]/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <img src="/linkedin.png" class="w-6 h-6" alt="LinkedIn" />
+                </div>
+                <div>
+                    <div class="font-bold text-gray-900 dark:text-white">LinkedIn</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Let's Connect</div>
+                </div>
+            </a>
+
+            <a href="https://www.instagram.com/developwithvedanshu" target="_blank" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-[#E1306C]/50 transition-all group hover:-translate-y-1">
+                <div class="w-12 h-12 bg-[#E1306C]/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <img src="/instagram.png" class="w-6 h-6" alt="Instagram" />
+                </div>
+                <div>
+                    <div class="font-bold text-gray-900 dark:text-white">Instagram</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Follow Journey</div>
+                </div>
+            </a>
+
+            <a href="mailto:pandeyvedashu@gmail.com" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-green-500/50 transition-all group hover:-translate-y-1">
+                <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <img src="/email.png" class="w-6 h-6" alt="Email" />
+                </div>
+                <div>
+                    <div class="font-bold text-gray-900 dark:text-white">Email</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Contact Me</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</BaseLayout>
