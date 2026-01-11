@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Fetch all Python aims from the ./aims directory
+const allAims = await Astro.glob('./aims/*.md');
+
+// Sort aims by aimNumber
+allAims.sort((a, b) => a.frontmatter.aimNumber - b.frontmatter.aimNumber);
+
+// Prepare aims data with title, aimNumber, and tags
+const aims = allAims.map((aim, index) => {
+  const rawTitle = aim.frontmatter.title;
+  // Clean up title to remove "1. ", "Aim #1:", etc.
+  const cleanedTitle = rawTitle ? rawTitle.replace(/^\d+\.\s*/, '').replace(/^Aim\s*#\d+:\s*/, '').replace('#','') : '';
+  
+  const aimNumber = aim.frontmatter.aimNumber !== undefined ? aim.frontmatter.aimNumber : index;
+  
+  // Difficulty logic adapted for Python (100 aims)
+  // Matches logic in src/layouts/AimLayout.astro
+  let difficulty = aim.frontmatter.difficulty || 'Beginner';
+  if (!aim.frontmatter.difficulty) {
+    if (aimNumber > 50) difficulty = 'Advanced';
+    else if (aimNumber > 25) difficulty = 'Intermediate';
+  }
+  
+  return {
+    aimNumber: aimNumber,
+    title: cleanedTitle,
+    tags: aim.frontmatter.tags || ['Python'],
+    difficulty: difficulty,
+    estimatedTime: aim.frontmatter.estimatedTime || `${10 + (aimNumber % 15)} min`
+  };
+});
+---
+
+<BaseLayout>
+    <div class="challenges-page">
+        <div class="challenges-header">
+            <h1>🐍 Python Programming</h1>
+            <p>Master Python from variables and loops to OOP and algorithms.
+            100 hands-on challenges to build a strong coding foundation.</p>
+        </div>
+
+        <div class="search-filter-section">
+            <div class="search-box">
+                🔍
+                <input type="text" id="search-bar" placeholder="Search challenges..." aria-label="Search Python challenges">
+            </div>
+            <select id="difficulty-filter" class="filter-select" aria-label="Filter by difficulty">
+                <option value="">All Difficulty Levels</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
+        </div>
+
+        <div id="aims-list" class="challenges-grid">
+            {aims.map((aim) => (
+                <a href={`/aims/${aim.aimNumber}`} data-difficulty={aim.difficulty.toLowerCase()} class="challenge-card">
+                    <div class="challenge-number">Challenge #{String(aim.aimNumber).padStart(2, '0')}</div>
+                    <h3 class="challenge-title">{aim.title}</h3>
+                    <p class="challenge-description">Learn and practice this important Python concept through hands-on coding.</p>
+                    <div class="challenge-meta">
+                        <span class={`difficulty-badge difficulty-${aim.difficulty.toLowerCase()}`}>
+                            {aim.difficulty}
+                        </span>
+                        <span>⏱️ {aim.estimatedTime}</span>
+                    </div>
+                </a>
+            ))}
+        </div>
+
+        <div id="no-results" style="display: none; text-align: center; padding: 3rem 1rem;">
+            <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 1.5rem;">No challenges match your search.</p>
+            <button id="reset-filters-btn" class="btn btn-primary">Reset Filters</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchBar = document.getElementById('search-bar') as HTMLInputElement;
+            const difficultyFilter = document.getElementById('difficulty-filter') as HTMLSelectElement;
+            const aimsList = document.getElementById('aims-list');
+            const noResultsDiv = document.getElementById('no-results');
+            const resetBtn = document.getElementById('reset-filters-btn');
+
+            if (!aimsList || !searchBar) return;
+
+            const allAims = Array.from(aimsList.querySelectorAll('a[data-difficulty]'));
+
+            function filterAims() {
+                const searchTerm = searchBar.value.toLowerCase();
+                const difficultyTerm = difficultyFilter.value.toLowerCase();
+                let visibleCount = 0;
+
+                allAims.forEach(aim => {
+                    const title = aim.textContent?.toLowerCase() || '';
+                    const difficulty = aim.getAttribute('data-difficulty') || '';
+
+                    const matchesSearch = title.includes(searchTerm);
+                    const matchesDifficulty = !difficultyTerm || difficulty === difficultyTerm;
+
+                    if (matchesSearch && matchesDifficulty) {
+                        (aim as HTMLElement).style.display = '';
+                        visibleCount++;
+                    } else {
+                        (aim as HTMLElement).style.display = 'none';
+                    }
+                });
+
+                // Show/hide no results message
+                if (visibleCount === 0) {
+                    (noResultsDiv as HTMLElement)!.style.display = 'block';
+                } else {
+                    (noResultsDiv as HTMLElement)!.style.display = 'none';
+                }
+            }
+
+            searchBar.addEventListener('keyup', filterAims);
+            difficultyFilter.addEventListener('change', filterAims);
+
+            resetBtn?.addEventListener('click', () => {
+                searchBar.value = '';
+                difficultyFilter.value = '';
+                filterAims();
+            });
+        });
+    </script>
+</BaseLayout>
