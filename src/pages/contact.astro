@@ -25,7 +25,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div class="mt-12 grid gap-8 sm:grid-cols-2">
             <a href="https://github.com/vedanshu49" target="_blank" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all group hover:-translate-y-1">
                 <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <img src="/github.svg" class="w-7 h-7 invert dark:invert-0" alt="GitHub" />
+                    <img src="/github.svg" class="contact-icon invert dark:invert-0" alt="GitHub" />
                 </div>
                 <div>
                     <div class="font-bold text-gray-900 dark:text-white">GitHub</div>
@@ -35,7 +35,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
             <a href="https://www.linkedin.com/in/vedanshu-pandey-221a38340" target="_blank" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-[#0077b5]/50 transition-all group hover:-translate-y-1">
                 <div class="w-12 h-12 bg-[#0077b5]/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <img src="/linkedin.png" class="w-6 h-6" alt="LinkedIn" />
+                    <img src="/linkedin.png" class="contact-icon" alt="LinkedIn" />
                 </div>
                 <div>
                     <div class="font-bold text-gray-900 dark:text-white">LinkedIn</div>
@@ -45,7 +45,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
             <a href="https://www.instagram.com/developwithvedanshu" target="_blank" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-[#E1306C]/50 transition-all group hover:-translate-y-1">
                 <div class="w-12 h-12 bg-[#E1306C]/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <img src="/instagram.png" class="w-6 h-6" alt="Instagram" />
+                    <img src="/instagram.png" class="contact-icon" alt="Instagram" />
                 </div>
                 <div>
                     <div class="font-bold text-gray-900 dark:text-white">Instagram</div>
@@ -55,7 +55,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
             <a href="mailto:pandeyvedashu@gmail.com" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-green-500/50 transition-all group hover:-translate-y-1">
                 <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <img src="/email.png" class="w-6 h-6" alt="Email" />
+                    <img src="/email.png" class="contact-icon" alt="Email" />
                 </div>
                 <div>
                     <div class="font-bold text-gray-900 dark:text-white">Email</div>
@@ -65,3 +65,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
     </div>
 </BaseLayout>
+
+<style>
+    .contact-icon {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+    }
+</style>
