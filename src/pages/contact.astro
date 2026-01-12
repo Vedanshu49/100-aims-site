@@ -22,7 +22,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             </p>
         </div>
 
-        <div class="mt-12 grid gap-8 sm:grid-cols-2">
+        <div class="mt-12 grid grid-cols-2 gap-4">
             <!-- GitHub Card -->
             <a href="https://github.com/vedanshu49" target="_blank" class="contact-card group">
                 <div class="contact-card-icon-wrapper github">
@@ -139,5 +139,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
     .contact-card:hover .contact-card-cta {
         transform: translateX(4px);
+    }
+
+    @media (max-width: 640px) {
+        .contact-card {
+            padding: 16px;
+            gap: 12px;
+        }
+        .contact-card-icon-wrapper {
+            width: 48px;
+            height: 48px;
+        }
+        .contact-card-icon {
+            width: 28px;
+            height: 28px;
+        }
+        .contact-card-title {
+            font-size: 1rem;
+        }
+        .contact-card-handle {
+            font-size: 0.75rem;
+        }
+        .contact-card-cta {
+            margin-top: 8px;
+            font-size: 0.875rem;
+        }
     }
 </style>
