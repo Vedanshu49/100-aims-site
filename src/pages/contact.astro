@@ -22,52 +22,48 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             </p>
         </div>
 
-        <div class="mt-12 grid grid-cols-2 gap-4">
+        <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6">
             <!-- GitHub Card -->
-            <a href="https://github.com/vedanshu49" target="_blank" class="contact-card group">
-                <div class="contact-card-icon-wrapper github">
-                    <img src="/github.png" class="contact-card-icon" alt="GitHub" />
+            <a href="https://github.com/vedanshu49" target="_blank" class="contact-link group">
+                <div class="contact-link-icon-wrapper github">
+                    <img src="/github.png" class="contact-link-icon" alt="GitHub" />
                 </div>
-                <div class="contact-card-content">
-                    <h3 class="contact-card-title">GitHub</h3>
-                    <p class="contact-card-handle">@vedanshu49</p>
-                    <p class="contact-card-cta">View Projects →</p>
+                <div class="contact-link-text">
+                    <span class="contact-link-title">GitHub</span>
+                    <span class="contact-link-subtitle">View Projects</span>
                 </div>
             </a>
 
             <!-- LinkedIn Card -->
-            <a href="https://www.linkedin.com/in/vedanshu-pandey-221a38340" target="_blank" class="contact-card group">
-                <div class="contact-card-icon-wrapper linkedin">
-                    <img src="/linkedin.png" class="contact-card-icon" alt="LinkedIn" />
+            <a href="https://www.linkedin.com/in/vedanshu-pandey-221a38340" target="_blank" class="contact-link group">
+                <div class="contact-link-icon-wrapper linkedin">
+                    <img src="/linkedin.png" class="contact-link-icon" alt="LinkedIn" />
                 </div>
-                <div class="contact-card-content">
-                    <h3 class="contact-card-title">LinkedIn</h3>
-                    <p class="contact-card-handle">Vedanshu Pandey</p>
-                    <p class="contact-card-cta">Let's Connect →</p>
+                <div class="contact-link-text">
+                    <span class="contact-link-title">LinkedIn</span>
+                    <span class="contact-link-subtitle">Let's Connect</span>
                 </div>
             </a>
 
             <!-- Instagram Card -->
-            <a href="https://www.instagram.com/developwithvedanshu" target="_blank" class="contact-card group">
-                <div class="contact-card-icon-wrapper instagram">
-                    <img src="/instagram.png" class="contact-card-icon" alt="Instagram" />
+            <a href="https://www.instagram.com/developwithvedanshu" target="_blank" class="contact-link group">
+                <div class="contact-link-icon-wrapper instagram">
+                    <img src="/instagram.png" class="contact-link-icon" alt="Instagram" />
                 </div>
-                <div class="contact-card-content">
-                    <h3 class="contact-card-title">Instagram</h3>
-                    <p class="contact-card-handle">@developwithvedanshu</p>
-                    <p class="contact-card-cta">Follow Journey →</p>
+                <div class="contact-link-text">
+                    <span class="contact-link-title">Instagram</span>
+                    <span class="contact-link-subtitle">Follow Journey</span>
                 </div>
             </a>
 
             <!-- Email Card -->
-            <a href="mailto:pandeyvedashu@gmail.com" class="contact-card group">
-                <div class="contact-card-icon-wrapper email">
-                    <img src="/email.png" class="contact-card-icon" alt="Email" />
+            <a href="mailto:pandeyvedashu@gmail.com" class="contact-link group">
+                <div class="contact-link-icon-wrapper email">
+                    <img src="/email.png" class="contact-link-icon" alt="Email" />
                 </div>
-                <div class="contact-card-content">
-                    <h3 class="contact-card-title">Email</h3>
-                    <p class="contact-card-handle">pandeyvedashu@gmail.com</p>
-                    <p class="contact-card-cta">Contact Me →</p>
+                <div class="contact-link-text">
+                    <span class="contact-link-title">Email</span>
+                    <span class="contact-link-subtitle">Contact Me</span>
                 </div>
             </a>
         </div>
@@ -75,94 +71,61 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
-    .contact-card {
+    .contact-link {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px;
+        border-radius: 12px;
         background-color: var(--background-secondary);
         border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 24px;
         text-decoration: none;
         color: var(--text-primary);
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease-in-out;
     }
-    .contact-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    .contact-link:hover {
         border-color: var(--primary-blue);
+        background-color: var(--background-primary);
+        transform: scale(1.03);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-    .contact-card-icon-wrapper {
-        width: 64px;
-        height: 64px;
-        border-radius: 12px;
+    .contact-link-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 9999px; /* Make it a circle */
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
         transition: transform 0.3s ease;
     }
-    .contact-card:hover .contact-card-icon-wrapper {
-        transform: scale(1.1);
+    .contact-link:hover .contact-link-icon-wrapper {
+        transform: rotate(-15deg);
     }
-    .contact-card-icon {
-        width: 36px;
-        height: 36px;
+    .contact-link-icon {
+        width: 24px;
+        height: 24px;
         object-fit: contain;
     }
-    .github .contact-card-icon {
+    .github { background-color: rgba(255, 255, 255, 0.05); }
+    .github .contact-link-icon {
         filter: invert(var(--invert-value));
     }
     .linkedin { background-color: #0077b520; }
     .instagram { background-color: #E1306C20; }
     .email { background-color: #22c55e20; }
-    
-    .contact-card-content {
+
+    .contact-link-text {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 2px;
     }
-    .contact-card-title {
-        font-size: 1.25rem;
+    .contact-link-title {
         font-weight: 600;
+        font-size: 1.1rem;
     }
-    .contact-card-handle {
-        color: var(--text-secondary);
-        font-family: monospace;
+    .contact-link-subtitle {
         font-size: 0.875rem;
-        word-break: break-all;
-    }
-    .contact-card-cta {
-        color: var(--primary-blue);
-        font-weight: 500;
-        margin-top: 12px;
-        transition: transform 0.3s ease;
-    }
-    .contact-card:hover .contact-card-cta {
-        transform: translateX(4px);
-    }
-
-    @media (max-width: 640px) {
-        .contact-card {
-            padding: 16px;
-            gap: 12px;
-        }
-        .contact-card-icon-wrapper {
-            width: 48px;
-            height: 48px;
-        }
-        .contact-card-icon {
-            width: 28px;
-            height: 28px;
-        }
-        .contact-card-title {
-            font-size: 1rem;
-        }
-        .contact-card-handle {
-            font-size: 0.75rem;
-        }
-        .contact-card-cta {
-            margin-top: 8px;
-            font-size: 0.875rem;
-        }
+        color: var(--text-secondary);
     }
 </style>
