@@ -23,43 +23,51 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
 
         <div class="mt-12 grid gap-8 sm:grid-cols-2">
-            <a href="https://github.com/vedanshu49" target="_blank" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all group hover:-translate-y-1">
-                <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <img src="/github.png" class="contact-icon invert dark:invert-0" alt="GitHub" />
+            <!-- GitHub Card -->
+            <a href="https://github.com/vedanshu49" target="_blank" class="contact-card group">
+                <div class="contact-card-icon-wrapper github">
+                    <img src="/github.png" class="contact-card-icon" alt="GitHub" />
                 </div>
-                <div>
-                    <div class="font-bold text-gray-900 dark:text-white">GitHub</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">View Projects</div>
-                </div>
-            </a>
-
-            <a href="https://www.linkedin.com/in/vedanshu-pandey-221a38340" target="_blank" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-[#0077b5]/50 transition-all group hover:-translate-y-1">
-                <div class="w-12 h-12 bg-[#0077b5]/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <img src="/linkedin.png" class="contact-icon" alt="LinkedIn" />
-                </div>
-                <div>
-                    <div class="font-bold text-gray-900 dark:text-white">LinkedIn</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Let's Connect</div>
+                <div class="contact-card-content">
+                    <h3 class="contact-card-title">GitHub</h3>
+                    <p class="contact-card-handle">@vedanshu49</p>
+                    <p class="contact-card-cta">View Projects →</p>
                 </div>
             </a>
 
-            <a href="https://www.instagram.com/developwithvedanshu" target="_blank" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-[#E1306C]/50 transition-all group hover:-translate-y-1">
-                <div class="w-12 h-12 bg-[#E1306C]/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <img src="/instagram.png" class="contact-icon" alt="Instagram" />
+            <!-- LinkedIn Card -->
+            <a href="https://www.linkedin.com/in/vedanshu-pandey-221a38340" target="_blank" class="contact-card group">
+                <div class="contact-card-icon-wrapper linkedin">
+                    <img src="/linkedin.png" class="contact-card-icon" alt="LinkedIn" />
                 </div>
-                <div>
-                    <div class="font-bold text-gray-900 dark:text-white">Instagram</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Follow Journey</div>
+                <div class="contact-card-content">
+                    <h3 class="contact-card-title">LinkedIn</h3>
+                    <p class="contact-card-handle">Vedanshu Pandey</p>
+                    <p class="contact-card-cta">Let's Connect →</p>
                 </div>
             </a>
 
-            <a href="mailto:pandeyvedashu@gmail.com" class="flex items-center gap-4 p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 hover:border-green-500/50 transition-all group hover:-translate-y-1">
-                <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <img src="/email.png" class="contact-icon" alt="Email" />
+            <!-- Instagram Card -->
+            <a href="https://www.instagram.com/developwithvedanshu" target="_blank" class="contact-card group">
+                <div class="contact-card-icon-wrapper instagram">
+                    <img src="/instagram.png" class="contact-card-icon" alt="Instagram" />
                 </div>
-                <div>
-                    <div class="font-bold text-gray-900 dark:text-white">Email</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Contact Me</div>
+                <div class="contact-card-content">
+                    <h3 class="contact-card-title">Instagram</h3>
+                    <p class="contact-card-handle">@developwithvedanshu</p>
+                    <p class="contact-card-cta">Follow Journey →</p>
+                </div>
+            </a>
+
+            <!-- Email Card -->
+            <a href="mailto:pandeyvedashu@gmail.com" class="contact-card group">
+                <div class="contact-card-icon-wrapper email">
+                    <img src="/email.png" class="contact-card-icon" alt="Email" />
+                </div>
+                <div class="contact-card-content">
+                    <h3 class="contact-card-title">Email</h3>
+                    <p class="contact-card-handle">pandeyvedashu@gmail.com</p>
+                    <p class="contact-card-cta">Contact Me →</p>
                 </div>
             </a>
         </div>
@@ -67,9 +75,69 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
-    .contact-icon {
-        height: 28px;
-        width: auto;
+    .contact-card {
+        background-color: var(--background-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 24px;
+        text-decoration: none;
+        color: var(--text-primary);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        transition: all 0.3s ease;
+    }
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        border-color: var(--primary-blue);
+    }
+    .contact-card-icon-wrapper {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+    }
+    .contact-card:hover .contact-card-icon-wrapper {
+        transform: scale(1.1);
+    }
+    .contact-card-icon {
+        width: 36px;
+        height: 36px;
         object-fit: contain;
+    }
+    .github .contact-card-icon {
+        filter: invert(var(--invert-value));
+    }
+    .linkedin { background-color: #0077b520; }
+    .instagram { background-color: #E1306C20; }
+    .email { background-color: #22c55e20; }
+    
+    .contact-card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .contact-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    .contact-card-handle {
+        color: var(--text-secondary);
+        font-family: monospace;
+        font-size: 0.875rem;
+        word-break: break-all;
+    }
+    .contact-card-cta {
+        color: var(--primary-blue);
+        font-weight: 500;
+        margin-top: 12px;
+        transition: transform 0.3s ease;
+    }
+    .contact-card:hover .contact-card-cta {
+        transform: translateX(4px);
     }
 </style>
